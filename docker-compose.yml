@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:9.5.0
+    container_name: jpa-mysql-db
+    environment:
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: invoice-db
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
