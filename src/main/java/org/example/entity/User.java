@@ -32,6 +32,6 @@ public class User {
     private String password;
 
     // TODO: Encrypt SSN
-    @Column
+    @Column(unique = true, nullable = false)
     private String ssn;
 }
