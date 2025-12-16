@@ -1,7 +1,6 @@
 package org.example;
 
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import org.example.entity.User;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
@@ -32,5 +31,8 @@ public class App {
         user.setSsn("123456-0000");
 
         userService.create(user);
+
+        System.out.println(user.getId());
+
     }
 }
