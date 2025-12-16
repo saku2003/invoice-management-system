@@ -1,0 +1,50 @@
+package org.example.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.Cascade;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.UUID;
+
+@Entity
+@Table (name="invoices")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class Invoice {
+
+    @Id
+    @GeneratedValue (strategy= GenerationType.UUID)
+    private UUID id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    @Column (name= "number", nullable = false, unique = true)
+    private String number;
+
+    @Column(name= "amount", nullable = false)
+    private BigDecimal amount;
+
+    @Column(name= "due_date")
+    private LocalDateTime dueDate;
+    @Column(name= "created_at")
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<InvoiceItem> items;
+
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus status;
+}
