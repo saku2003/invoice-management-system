@@ -44,6 +44,7 @@ public class CompanyService {
 
     public CompanyDTO toDto(Company company) {
         return CompanyDTO.builder()
+           //  .id(company.getId()) saknas???
             .orgNum(company.getOrgNum())
             .email(company.getEmail())
             .phoneNumber(company.getPhoneNumber())
