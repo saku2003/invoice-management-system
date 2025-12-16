@@ -13,11 +13,26 @@ public class User {
     private UUID id;
 
     @Column
-    private String username;
+    private String first_name;
 
+    @Column
+    private String last_name;
 
-    public User(String username){
-        this.username = username;
+    @Column
+    private String email;
+
+    @Column
+    private String password;
+
+    @Column
+    private String ssn;
+
+    public User(String first_name, String last_name, String email, String password, String ssn) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.password = password;
+        this.ssn = ssn;
     }
 
     public User() {
