@@ -14,12 +14,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDTO create(String firstName, String lastName, String email, String password, String ssn) {
+    public UserDTO create(String firstName, String lastName, String email, String password) {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalStateException("Email already in use");
-        }
-        if (userRepository.existsBySsn(ssn)) {
-            throw new IllegalStateException("SSN already in use");
         }
 
         User user = new User();
@@ -27,7 +24,6 @@ public class UserService {
         user.setLastName(lastName);
         user.setEmail(email);
         user.setPassword(password);
-        user.setSsn(ssn);
         user.setCreated_at(LocalDateTime.now());
 
         userRepository.save(user);

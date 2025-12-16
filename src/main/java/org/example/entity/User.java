@@ -32,10 +32,6 @@ public class User {
     @Column
     private String password;
 
-    // TODO: Encrypt SSN
-    @Column(unique = true, nullable = false)
-    private String ssn;
-
     @Column
     private LocalDateTime created_at;
 }

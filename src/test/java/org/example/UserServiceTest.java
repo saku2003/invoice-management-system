@@ -25,17 +25,12 @@ public class UserServiceTest {
     @Test
     void testCreateUser() {
         String email = "test2@email.com";
-        String ssn = "1234567-0000";
-
         when(userRepository.existsByEmail(email)).thenReturn(false);
-        when(userRepository.existsBySsn(ssn)).thenReturn(false);
-
         UserDTO userDTO = userService.create(
             "test",
             "test",
             email,
-            "password",
-            ssn
+            "password"
         );
 
         assertNotNull(userDTO);
@@ -52,24 +47,11 @@ public class UserServiceTest {
         when(userRepository.existsByEmail(email)).thenReturn(true);
 
         Exception exception = assertThrows(IllegalStateException.class, () -> {
-            userService.create("test", "test", email, "pass", "123");
+            userService.create("test", "test", email, "pass");
         });
 
         assertEquals("Email already in use", exception.getMessage());
         verify(userRepository, never()).save(any());
     }
 
-    @Test
-    void testCreateUserSsnAlreadyExists() {
-        String ssn = "1234567-0000";
-
-        when(userRepository.existsBySsn(ssn)).thenReturn(true);
-
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
-            userService.create("test", "test", "exists@email.com", "pass", ssn);
-        });
-
-        assertEquals("SSN already in use", exception.getMessage());
-        verify(userRepository, never()).save(any());
-    }
 }

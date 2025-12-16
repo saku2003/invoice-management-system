@@ -30,8 +30,7 @@ public class App {
             "test",
             "test",
             "test@email.com",
-            "password",
-            "123456-0000"
+            "password"
         );
 
         System.out.println(testUser);
