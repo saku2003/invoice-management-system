@@ -26,4 +26,13 @@ public class CompanyRepository extends BaseRepository<Company, UUID>{
                 .getSingleResult() > 0
         );
     }
+
+    public Optional<Company> findByOrgNum(String orgNum) {
+        return executeRead(em ->
+            em.createQuery("SELECT c FROM Company c WHERE c.orgNum = :orgNum", Company.class)
+                .setParameter("orgNum", orgNum)
+                .getResultStream()
+                .findFirst()
+        );
+    }
 }
