@@ -50,6 +50,14 @@ public abstract class BaseRepository <T, ID> {
         });
     }
 
+    public void delete(T entity) {
+        runInTransaction(em -> {
+            em.remove(em.contains(entity) ? entity : em.merge(entity));
+            return null;
+        });
+    }
+
+
 
 
 }
