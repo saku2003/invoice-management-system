@@ -6,6 +6,7 @@ import org.example.entity.Company;
 import org.example.repository.CompanyRepository;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class CompanyService {
     private final CompanyRepository companyRepository;
@@ -55,4 +56,18 @@ public class CompanyService {
             .build();
     }
 
+
+    @Transactional
+    public CompanyDTO update(
+        UUID id,
+        String name,
+        String orgNum,
+        String email,
+        String address,
+        String city,
+        String country,
+        String phoneNumber) {
+        //TODO: Implement
+        return null;
+    }
 }
