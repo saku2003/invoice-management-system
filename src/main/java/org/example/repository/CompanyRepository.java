@@ -18,4 +18,12 @@ public class CompanyRepository extends BaseRepository<Company, UUID>{
                 .getSingleResult() > 0
         );
     }
+
+    public boolean existsByEmail(String email) {
+        return executeRead(em ->
+            em.createQuery("SELECT COUNT(c) FROM Company c WHERE c.email = :email", Long.class)
+                .setParameter("email", email)
+                .getSingleResult() > 0
+        );
+    }
 }
