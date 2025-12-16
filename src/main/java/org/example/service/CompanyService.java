@@ -45,13 +45,12 @@ public class CompanyService {
             .build();
 
         companyRepository.save(company);
-
         return toDto(company);
     }
 
     public CompanyDTO toDto(Company company) {
         return CompanyDTO.builder()
-            //  .id(company.getId()) saknas???
+            .id(company.getId())
             .orgNum(company.getOrgNum())
             .email(company.getEmail())
             .phoneNumber(company.getPhoneNumber())
@@ -69,8 +68,8 @@ public class CompanyService {
     public CompanyDTO update(
         UUID id,
         String name,
-        String orgNum,
-        String email,
+        String newOrgNum,
+        String newEmail,
         String address,
         String city,
         String country,
@@ -79,20 +78,21 @@ public class CompanyService {
         Company company = companyRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + id));
 
-        if (orgNum != null && !orgNum.equals(company.getOrgNum())) {
-            if (companyRepository.existsByOrgNum(orgNum)) {
-                throw new IllegalArgumentException("Company with orgNum " + orgNum + " already exists");
+        if (newOrgNum != null && !newOrgNum.equals(company.getOrgNum())) {
+            if (companyRepository.existsByOrgNum(newOrgNum)) {
+                throw new IllegalArgumentException("Company with orgNum " + newOrgNum + " already exists");
             }
         }
 
-        if (email != null && !email.equals(company.getEmail())) {
-            if (companyRepository.existsByEmail(email)) {
-                throw new IllegalArgumentException("Company with email " + email + " already exists");
+        if (newEmail != null && !newEmail.equals(company.getEmail())) {
+            if (companyRepository.existsByEmail(newEmail)) {
+                throw new IllegalArgumentException("Company with email " + newEmail + " already exists");
             }
         }
+
         if (name != null) company.setName(name);
-        if (orgNum != null) company.setOrgNum(orgNum);
-        if (email != null) company.setEmail(email);
+        if (newOrgNum != null) company.setOrgNum(newOrgNum);
+        if (newEmail != null) company.setEmail(newEmail);
         if (address != null) company.setAddress(address);
         if (city != null) company.setCity(city);
         if (country != null) company.setCountry(country);
