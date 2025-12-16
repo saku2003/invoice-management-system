@@ -39,5 +39,17 @@ public abstract class BaseRepository <T, ID> {
         }
     }
 
+    public void save(T entity) {
+        runInTransaction(em -> {
+            if (em.contains(entity)) {
+                em.merge(entity);
+            } else {
+                em.persist(entity);
+            }
+            return null;
+        });
+    }
+
+
 
 }
