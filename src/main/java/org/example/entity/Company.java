@@ -31,9 +31,6 @@ public class Company {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "is_active")
-    private boolean isActive;
-
     private String name;
     private String address;
     private String city;

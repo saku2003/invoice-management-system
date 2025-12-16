@@ -11,7 +11,6 @@ public record CompanyDTO(
         String orgNum,
         String email,
         String phoneNumber,
-        boolean isActive,
         String name,
         String address,
         String city,
