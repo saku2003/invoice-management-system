@@ -66,9 +66,4 @@ public abstract class BaseRepository <T, ID> {
                 .getResultList()
         );
     }
-
-
-
-
-
 }
