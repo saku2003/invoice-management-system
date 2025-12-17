@@ -1,17 +1,21 @@
 package org.example.auth;
 
+import org.example.dto.UserDTO;
 import org.example.entity.User;
 import org.example.repository.UserRepository;
+import org.example.service.UserService;
 
 
 public class AuthService {
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public AuthService(UserRepository userRepository) {
+    public AuthService(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
-    public User authenticate(String email, String password) {
+    public UserDTO authenticate(String email, String password) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalStateException("Invalid email or password"));
 
@@ -19,6 +23,6 @@ public class AuthService {
             throw new IllegalStateException("Invalid email or password");
         }
 
-        return user;
+        return userService.toDto(user);
     }
 }
