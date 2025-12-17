@@ -28,7 +28,7 @@ public class App {
 
 
         // Test User example implementation
-        UserDTO testUser = userService.create(
+        UserDTO testUser = userService.register(
             "test",
             "test",
             "test@email.com",
