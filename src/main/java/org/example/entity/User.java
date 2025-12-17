@@ -28,7 +28,6 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    // TODO: Encrypt password
     private String password;
 
     @Column(name = "created_at")

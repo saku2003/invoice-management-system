@@ -6,6 +6,7 @@ import org.example.entity.User;
 import org.example.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class UserService {
 
@@ -29,6 +30,12 @@ public class UserService {
 
         userRepository.save(user);
         return toDto(user);
+    }
+
+    public void deleteUser(UUID userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalStateException("User not found"));
+        userRepository.delete(user);
     }
 
     public UserDTO toDto(User user) {
