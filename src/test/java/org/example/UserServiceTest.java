@@ -54,4 +54,20 @@ public class UserServiceTest {
         verify(userRepository, never()).save(any());
     }
 
+    @Test
+    void testCreateUserWithEncryptedPassword() {
+        when(userRepository.existsByEmail(any())).thenReturn(false);
+
+        UserDTO dto = userService.create(
+            "test",
+            "test",
+            "test@email.com",
+            "password"
+        );
+
+        verify(userRepository).save(argThat(user ->
+            !user.getPassword().equals("password")
+        ));
+    }
+
 }

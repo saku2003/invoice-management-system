@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.auth.PasswordEncoder;
 import org.example.dto.UserDTO;
 import org.example.entity.User;
 import org.example.repository.UserRepository;
@@ -23,7 +24,7 @@ public class UserService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(PasswordEncoder.hash(password));
         user.setCreatedAt(LocalDateTime.now());
 
         userRepository.save(user);
