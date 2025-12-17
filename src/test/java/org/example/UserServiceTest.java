@@ -2,11 +2,15 @@ package org.example;
 
 
 import org.example.dto.UserDTO;
+import org.example.entity.User;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -68,6 +72,31 @@ public class UserServiceTest {
         verify(userRepository).save(argThat(user ->
             !user.getPassword().equals("password")
         ));
+    }
+
+    @Test
+    void testDeleteUser() {
+        UUID userId = UUID.randomUUID();
+        User user = new User();
+        user.setId(userId);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        userService.deleteUser(userId);
+
+        verify(userRepository, times(1)).delete(user);
+    }
+
+    @Test
+    void testDeleteUserNotFound() {
+        UUID userId = UUID.randomUUID();
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(IllegalStateException.class,
+            () -> userService.deleteUser(userId));
+
+        assertEquals("User not found", exception.getMessage());
+        verify(userRepository, never()).delete(any());
     }
 
 }
