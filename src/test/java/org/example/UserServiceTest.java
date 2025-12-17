@@ -99,4 +99,28 @@ public class UserServiceTest {
         verify(userRepository, never()).delete(any());
     }
 
+    @Test
+    void testRegisterUserWithInvalidEmail() {
+        String invalidEmail = "invalid-email";
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.register("John", "Doe", invalidEmail, "password123");
+        });
+
+        assertEquals("Invalid email format", exception.getMessage());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void testRegisterUserWithInvalidPassword() {
+        String email = "test@email.com";
+        String shortPassword = "123"; // too short
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.register("John", "Doe", email, shortPassword);
+        });
+
+        assertEquals("Password must be at least 8 characters long", exception.getMessage());
+        verify(userRepository, never()).save(any());
+    }
 }
