@@ -17,16 +17,20 @@ public class UserService {
     }
 
     public UserDTO register(String firstName, String lastName, String email, String password) {
-        if (userRepository.existsByEmail(email)) {
-            throw new IllegalStateException("Email already in use");
-        }
-        if (password == null || password.length() < 8) {
-            throw new IllegalArgumentException("Password must be at least 8 characters long");
+        boolean emailValid = email != null && email.matches(
+            "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)*\\.[A-Za-z]{2,}$"
+        );
+        boolean passwordValid = password != null && password.length() >= 8;
+
+        if (!emailValid || userRepository.existsByEmail(email)) {
+            // Generic error message to prevent user enumeration
+            throw new IllegalArgumentException("Invalid registration data");
         }
 
-        if (email == null || !email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,}$")) {
-            throw new IllegalArgumentException("Invalid email format");
+        if (!passwordValid) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
         }
+
 
         User user = new User();
         user.setFirstName(firstName);

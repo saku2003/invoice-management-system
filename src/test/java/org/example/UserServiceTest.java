@@ -50,11 +50,11 @@ public class UserServiceTest {
 
         when(userRepository.existsByEmail(email)).thenReturn(true);
 
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.register("test", "test", email, "pass");
         });
 
-        assertEquals("Email already in use", exception.getMessage());
+        assertEquals("Invalid registration data", exception.getMessage());
         verify(userRepository, never()).save(any());
     }
 
@@ -107,7 +107,7 @@ public class UserServiceTest {
             userService.register("John", "Doe", invalidEmail, "password123");
         });
 
-        assertEquals("Invalid email format", exception.getMessage());
+        assertEquals("Invalid registration data", exception.getMessage());
         verify(userRepository, never()).save(any());
     }
 
@@ -120,7 +120,7 @@ public class UserServiceTest {
             userService.register("John", "Doe", email, shortPassword);
         });
 
-        assertEquals("Password must be at least 8 characters long", exception.getMessage());
+        assertEquals("Password must be at least 8 characters", exception.getMessage());
         verify(userRepository, never()).save(any());
     }
 }
