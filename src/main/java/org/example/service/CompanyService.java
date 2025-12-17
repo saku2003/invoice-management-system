@@ -28,9 +28,6 @@ public class CompanyService {
         if (companyRepository.existsByOrgNum(orgNum)) {
             throw new IllegalArgumentException("Company with orgNum " + orgNum + " already exists");
         }
-        if (companyRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Company with email " + email + " already exists");
-        }
 
         Company company = Company.builder()
             .orgNum(orgNum)
@@ -84,12 +81,6 @@ public class CompanyService {
             }
         }
 
-        if (newEmail != null && !newEmail.equals(company.getEmail())) {
-            if (companyRepository.existsByEmail(newEmail)) {
-                throw new IllegalArgumentException("Company with email " + newEmail + " already exists");
-            }
-        }
-
         if (name != null) company.setName(name);
         if (newOrgNum != null) company.setOrgNum(newOrgNum);
         if (newEmail != null) company.setEmail(newEmail);
@@ -102,5 +93,14 @@ public class CompanyService {
 
         companyRepository.update(company);
         return toDto(company);
+    }
+
+    @Transactional
+    public void deleteCompany(UUID companyId) {
+        Company company = companyRepository.findById(companyId)
+            .orElseThrow(() -> new IllegalStateException("Company not found with id: " + companyId));
+
+
+        companyRepository.delete(company);
     }
 }
