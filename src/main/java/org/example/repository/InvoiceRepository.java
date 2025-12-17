@@ -43,4 +43,20 @@ public class InvoiceRepository extends BaseRepository<Invoice, UUID>{
     }
 
 
+    /*
+    Method to fetch the whole Invoice as an aggregate with all of its lines and fields.
+    This is done with a single database query and JOIN FETCH.
+    For example when we want to see all the data from the invoice at once.
+     */
+    public Optional<Invoice> findByIdWithItems(UUID id) {
+        return executeRead(em -> {
+            return em.createQuery(
+                    "SELECT i FROM Invoice i LEFT JOIN FETCH i.items WHERE i.id = :id", Invoice.class)
+                .setParameter("id", id)
+                .getResultStream()
+                .findFirst();
+        });
+    }
+
+
 }
