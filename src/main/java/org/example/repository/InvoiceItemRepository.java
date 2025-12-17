@@ -25,4 +25,6 @@ public class InvoiceItemRepository extends BaseRepository<InvoiceItem, UUID> {
     }
 
 
+
+
 }
