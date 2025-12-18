@@ -26,11 +26,11 @@ public class InvoiceRepository extends BaseRepository<Invoice, UUID>{
         });
     }
 
-    public void deleteById(UUID id) {
-        findById(id).ifPresent(invoice -> {
-            delete(invoice);
-        });
-    }
+//    public void deleteById(UUID id) {
+//        findById(id).ifPresent(invoice -> {
+//            delete(invoice);
+//        });
+//    }
 
     public Optional<Invoice> findByInvoiceNumber(String number) {
         return executeRead(em -> {
@@ -48,6 +48,8 @@ public class InvoiceRepository extends BaseRepository<Invoice, UUID>{
     This is done with a single database query and JOIN FETCH.
     For example when we want to see all the data from the invoice at once.
      */
+
+    //todo behövs detta om de redan har en relation?
     public Optional<Invoice> findByIdWithItems(UUID id) {
         return executeRead(em -> {
             return em.createQuery(

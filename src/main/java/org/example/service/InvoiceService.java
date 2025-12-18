@@ -3,6 +3,7 @@ package org.example.service;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import org.example.dto.InvoiceDTO;
+import org.example.dto.InvoiceItemDTO;
 import org.example.entity.Invoice;
 import org.example.entity.InvoiceItem;
 import org.example.entity.InvoiceStatus;
@@ -28,8 +29,25 @@ public class InvoiceService {
         this.invoiceItemRepository = invoiceItemRepository;
         this.invoiceRepository = invoiceRepository;
     }
+//user sends us a draftDTO with no ID no created_at and total:amount not confirmed
+    // returns a DTO to the frontend:
+    //input DTO: "I want to create this"
+    //Method: Translating dto to entity
+    //Return DTO: Confirmation: this has been created with the definitive details)
+    //we don't want to return entities because of safety or LazyInitializationException
+    public InvoiceDTO createInvoice(InvoiceDTO dto) {
+        // Translating DTO to Entity (to save in DB)
+        Invoice invoice = new Invoice();
+        invoice.setNumber(dto.number());
+        invoice.setDueDate(dto.dueDate());
+        invoice.setStatus(InvoiceStatus.CREATED);
 
-    public InvoiceDTO createInvoice(InvoiceDTO invoiceDTO) {}
+        // creates the entity (DB creates ID and timestamp)
+        Invoice savedInvoice = invoiceRepository.create(invoice);
+
+        // translate entity to DTO (to give the user a complete receipt)
+        return mapToDTO(savedInvoice);
+    }
 
     public Optional<InvoiceDTO> getInvoiceById(UUID id) {}
 
@@ -47,6 +65,31 @@ public class InvoiceService {
 
     public void deleteInvoice(UUID id) {
         invoiceRepository.deleteById(id);
+    }
+
+    //method to update items on an existing invoice
+    public InvoiceDTO updateInvoiceItems(UUID id, Set<InvoiceItemDTO> newItemDtos) {
+        Invoice invoice=invoiceRepository.findByIdWithItems(id)
+            .orElseThrow(()->new EntityNotFoundException("Invoice not found"));
+
+        //clears the current set to handle deletions (orphan removal handles SQL)
+        invoice.getItems().clear();
+
+        //Maps the new DTOs to entities and adds them
+        for (InvoiceItemDTO itemDto : newItemDtos) {
+            InvoiceItem item = new InvoiceItem();
+            item.setQuantity(itemDto.quantity());
+            item.setUnitPrice(itemDto.unitPrice());
+            item.setInvoice(invoice); // Viktigt för @ManyToOne-kopplingen
+
+            invoice.getItems().add(item);
+
+            //saves the complete Invoice
+            Invoice updatedInvoice=invoiceRepository.update(invoice);
+
+            //returns the updated invoice as DTO
+            return mapToDTO(updatedInvoice);
+        }
     }
 
 
