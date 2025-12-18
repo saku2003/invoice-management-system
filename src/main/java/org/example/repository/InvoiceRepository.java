@@ -11,12 +11,8 @@ public class InvoiceRepository extends BaseRepository<Invoice, UUID>{
         super(emf, Invoice.class);
     }
 
-//TODO: flytta upp till baserepo? så vi kan radera mha id? Då kan alla repos rader på det här sättet?
-//    public void deleteById(UUID id) {
-//        findById(id).ifPresent(invoice -> {
-//            delete(invoice);
-//        });
-//    }
+
+
 
     public Optional<Invoice> findByInvoiceNumber(String number) {
         return executeRead(em -> {

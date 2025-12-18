@@ -1,6 +1,4 @@
 package org.example.service;
-
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.example.dto.InvoiceDTO;
@@ -10,10 +8,7 @@ import org.example.entity.InvoiceItem;
 import org.example.entity.InvoiceStatus;
 import org.example.repository.InvoiceItemRepository;
 import org.example.repository.InvoiceRepository;
-
 import java.math.BigDecimal;
-import java.security.PrivateKey;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -81,6 +76,12 @@ public class InvoiceService {
         //saves the update to the database
         invoiceRepository.update(invoice);
 
+    }
+
+    public void deleteById(UUID id) {
+        findById(id).ifPresent(invoice -> {
+            delete(invoice);
+        });
     }
 
     public void deleteInvoice(UUID id) {
