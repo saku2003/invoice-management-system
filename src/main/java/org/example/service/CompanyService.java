@@ -15,7 +15,7 @@ public class CompanyService {
         this.companyRepository = companyRepository;
     }
 
-    @Transactional
+    //returnerar DTO
     public CompanyDTO create(
         String orgNum,
         String email,
@@ -61,12 +61,11 @@ public class CompanyService {
     }
 
 
-    @Transactional
     public CompanyDTO update(
         UUID id,
         String name,
-        String newOrgNum,
-        String newEmail,
+        String orgNum,
+        String email,
         String address,
         String city,
         String country,
@@ -75,15 +74,15 @@ public class CompanyService {
         Company company = companyRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + id));
 
-        if (newOrgNum != null && !newOrgNum.equals(company.getOrgNum())) {
-            if (companyRepository.existsByOrgNum(newOrgNum)) {
-                throw new IllegalArgumentException("Company with orgNum " + newOrgNum + " already exists");
+        if (orgNum != null && !orgNum.equals(company.getOrgNum())) {
+            if (companyRepository.existsByOrgNum(orgNum)) {
+                throw new IllegalArgumentException("Company with orgNum " + orgNum + " already exists");
             }
         }
 
         if (name != null) company.setName(name);
-        if (newOrgNum != null) company.setOrgNum(newOrgNum);
-        if (newEmail != null) company.setEmail(newEmail);
+        if (orgNum != null) company.setOrgNum(orgNum);
+        if (email != null) company.setEmail(email);
         if (address != null) company.setAddress(address);
         if (city != null) company.setCity(city);
         if (country != null) company.setCountry(country);
@@ -95,7 +94,6 @@ public class CompanyService {
         return toDto(company);
     }
 
-    @Transactional
     public void deleteCompany(UUID companyId) {
         Company company = companyRepository.findById(companyId)
             .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + companyId));
