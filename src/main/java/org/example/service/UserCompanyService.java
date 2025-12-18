@@ -27,7 +27,7 @@ public class UserCompanyService {
             .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + companyId));
 
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + userId));
+            .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
         UserCompany association = new UserCompany(user, company);
 
