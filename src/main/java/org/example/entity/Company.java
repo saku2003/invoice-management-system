@@ -52,4 +52,8 @@ public class Company {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Default
     private Set<Invoice> invoices = new HashSet<>();
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Default
+    private Set<UserCompany> userCompanies = new HashSet<>();
 }

@@ -6,6 +6,7 @@ import lombok.*;
 @Entity
 @Table(name = "user_company")
 @Getter
+@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class UserCompany {
