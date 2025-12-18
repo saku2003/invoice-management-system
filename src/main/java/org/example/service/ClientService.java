@@ -53,9 +53,7 @@ public class ClientService {
         Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new IllegalArgumentException("Client not found with id: " + clientId));
 
-        Company company = client.getCompany();
-        company.getClients().remove(client);
-        companyRepository.update(company);
+        clientRepository.delete(client);
     }
 
 
