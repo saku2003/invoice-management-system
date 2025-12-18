@@ -11,6 +11,7 @@ import org.example.repository.InvoiceItemRepository;
 import org.example.repository.InvoiceRepository;
 
 import java.math.BigDecimal;
+import java.security.PrivateKey;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,10 +25,17 @@ public class InvoiceService {
     private final InvoiceItemRepository invoiceItemRepository;
     private final InvoiceRepository invoiceRepository;
 
+    //fields to be able to connect invoices to clients and companies
+    private final ClientRepository clientRepository;
+    private final CompanyRepository companyRepository;
 
-    public InvoiceService(InvoiceItemRepository invoiceItemRepository, InvoiceRepository invoiceRepository) {
+
+    public InvoiceService(InvoiceItemRepository invoiceItemRepository, InvoiceRepository invoiceRepository,
+                          ClientRepository clientRepository,  CompanyRepository companyrepository) {
         this.invoiceItemRepository = invoiceItemRepository;
         this.invoiceRepository = invoiceRepository;
+        this.clientRepository = clientRepository;
+        this.companyRepository = companyrepository;
     }
 //user sends us a draftDTO with no ID no created_at and total:amount not confirmed
     // returns a DTO to the frontend:
@@ -36,11 +44,12 @@ public class InvoiceService {
     //Return DTO: Confirmation: this has been created with the definitive details)
     //we don't want to return entities because of safety or LazyInitializationException
     public InvoiceDTO createInvoice(InvoiceDTO dto) {
+        //validation:
+        invoiceRepository.findByInvoiceNumber(dto.number()).ifPresent(existing -> {
+            throw new IllegalArgumentException("Invoice number " + dto.number() + " already in use.");
+        });
         // Translating DTO to Entity (to save in DB)
-        Invoice invoice = new Invoice();
-        invoice.setNumber(dto.number());
-        invoice.setDueDate(dto.dueDate());
-        invoice.setStatus(InvoiceStatus.CREATED);
+        Invoice invoice = mapToEntity(dto);
 
         // creates the entity (DB creates ID and timestamp)
         Invoice savedInvoice = invoiceRepository.create(invoice);
@@ -49,7 +58,17 @@ public class InvoiceService {
         return mapToDTO(savedInvoice);
     }
 
-    public Optional<InvoiceDTO> getInvoiceById(UUID id) {}
+
+
+// method to find an invoice by ID
+    //if invoice is found, it gets mapped from entity to DTO.
+    // the user receives the actual total amount since calculate total is integrated here also
+    public Optional<InvoiceDTO> getInvoiceById(UUID id) {
+        return invoiceRepository.findByIdWithItems(id) //fetches the invoice and items in one question
+            .map(this::mapToDTO);
+    }
+
+
 
     public void updateStatus(UUID id, InvoiceStatus newStatus) {
         Invoice invoice=invoiceRepository.findById(id)
@@ -84,14 +103,38 @@ public class InvoiceService {
 
             invoice.getItems().add(item);
 
-            //saves the complete Invoice
-            Invoice updatedInvoice=invoiceRepository.update(invoice);
 
-            //returns the updated invoice as DTO
-            return mapToDTO(updatedInvoice);
         }
+        //saves the complete Invoice
+        Invoice updatedInvoice=invoiceRepository.update(invoice);
+
+        //returns the updated invoice as DTO
+        return mapToDTO(updatedInvoice);
     }
 
+
+
+//help method to convert from DTO to entity and connect each invoice to the client or company
+    private Invoice mapToEntity(InvoiceDTO dto) {
+        Invoice invoice = new Invoice();
+        invoice.setNumber(dto.number());
+        invoice.setDueDate(dto.dueDate());
+        invoice.setStatus(InvoiceStatus.CREATED);
+
+// connection to client
+        if (dto.clientId() != null) {
+            invoice.setClient(clientRepository.findById(dto.clientId())
+                .orElseThrow(() -> new EntityNotFoundException("Client not found")));
+        }
+
+        //connection to Company
+        if (dto.companyId() != null) {
+            invoice.setCompany(companyRepository.findById(dto.companyId())
+                .orElseThrow(() -> new EntityNotFoundException("Company not found")));
+        }
+
+        return invoice;
+    }
 
 
     //method that converts data from entity to DTO (easy for user)

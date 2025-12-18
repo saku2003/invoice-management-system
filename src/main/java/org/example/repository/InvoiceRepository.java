@@ -10,22 +10,8 @@ public class InvoiceRepository extends BaseRepository<Invoice, UUID>{
     protected InvoiceRepository(EntityManagerFactory emf) {
         super(emf, Invoice.class);
     }
-//keep this method just for readability (method is already defined in Baserepository)
-    public Invoice createInvoice(Invoice invoice) {
-        return runInTransaction(em -> {
-            em.persist(invoice);
-            return invoice;
-        });
 
-    }
-    //keep this method just for readability (method is already defined in Baserepository)
-    public Invoice updateInvoice(Invoice invoice) {
-        return runInTransaction(em -> {
-             return em.merge(invoice);
-
-        });
-    }
-
+//TODO: flytta upp till baserepo? så vi kan radera mha id? Då kan alla repos rader på det här sättet?
 //    public void deleteById(UUID id) {
 //        findById(id).ifPresent(invoice -> {
 //            delete(invoice);
