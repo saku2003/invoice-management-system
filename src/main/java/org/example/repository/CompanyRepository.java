@@ -57,7 +57,7 @@ public class CompanyRepository extends BaseRepository<Company, UUID>{
     public List<Company> findByName(String name) {
         return executeRead(em ->
             em.createQuery("SELECT c FROM Company c WHERE c.name LIKE :name", Company.class)
-                .setParameter("name", "%" + name + "%")
+                .setParameter("name", "%" + name.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%")
                 .getResultList()
         );
     }

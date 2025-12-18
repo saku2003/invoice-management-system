@@ -98,7 +98,7 @@ public class CompanyService {
     @Transactional
     public void deleteCompany(UUID companyId) {
         Company company = companyRepository.findById(companyId)
-            .orElseThrow(() -> new IllegalStateException("Company not found with id: " + companyId));
+            .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + companyId));
 
 
         companyRepository.delete(company);
