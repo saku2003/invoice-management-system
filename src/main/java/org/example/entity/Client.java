@@ -29,7 +29,7 @@ public class Client {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String email;
 
     private String address;
