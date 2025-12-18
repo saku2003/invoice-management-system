@@ -1,6 +1,5 @@
 package org.example.service;
 
-import jakarta.transaction.Transactional;
 import org.example.dto.CompanyDTO;
 import org.example.entity.Company;
 import org.example.repository.CompanyRepository;
@@ -15,7 +14,6 @@ public class CompanyService {
         this.companyRepository = companyRepository;
     }
 
-    //returnerar DTO
     public CompanyDTO create(
         String orgNum,
         String email,
@@ -97,8 +95,6 @@ public class CompanyService {
     public void deleteCompany(UUID companyId) {
         Company company = companyRepository.findById(companyId)
             .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + companyId));
-
-
         companyRepository.delete(company);
     }
 }
