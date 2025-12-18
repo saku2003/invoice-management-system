@@ -79,6 +79,7 @@ public class ClientService {
         if (city != null) client.setCity(city);
         if (country != null) client.setCountry(country);
         if (phoneNumber != null) client.setPhoneNumber(phoneNumber);
+        client.setUpdatedAt(LocalDateTime.now());
 
         clientRepository.update(client);
         return toDto(client);
