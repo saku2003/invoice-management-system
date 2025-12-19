@@ -45,7 +45,7 @@ public class UserService {
 
     public void deleteUser(UUID userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalStateException("User not found"));
+            .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
         userRepository.delete(user);
     }
 
