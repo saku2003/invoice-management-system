@@ -135,7 +135,6 @@ public class InvoiceService {
             item.setInvoice(invoice); // Viktigt för @ManyToOne-kopplingen
             invoice.getItems().add(item);
         }
-
         invoice.setAmount(calculateTotal(invoice.getItems()));
         //saves the complete Invoice
         Invoice updatedInvoice=invoiceRepository.update(invoice);
