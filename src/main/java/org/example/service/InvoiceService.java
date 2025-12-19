@@ -22,9 +22,7 @@ import java.util.UUID;
 // ie.  the method createInvoiceWithItems is more secure when both the lines/items and invoice are saved in the same transaction
 public class InvoiceService {
 
-    private final InvoiceItemRepository invoiceItemRepository;
     private final InvoiceRepository invoiceRepository;
-
     //fields to be able to connect invoices to clients and companies
     private final ClientRepository clientRepository;
     private final CompanyRepository companyRepository;
@@ -32,9 +30,8 @@ public class InvoiceService {
     private final ClientService clientService;
 
 
-    public InvoiceService(InvoiceItemRepository invoiceItemRepository, ClientService clientService, CompanyUserService companyUserService, ClientRepository clientRepository, InvoiceRepository invoiceRepository,
+    public InvoiceService( ClientService clientService, CompanyUserService companyUserService, ClientRepository clientRepository, InvoiceRepository invoiceRepository,
                             CompanyRepository companyrepository) {
-        this.invoiceItemRepository = invoiceItemRepository;
         this.invoiceRepository = invoiceRepository;
         this.clientRepository = clientRepository;
         this.companyRepository = companyrepository;
@@ -47,8 +44,10 @@ public class InvoiceService {
     //Method: Translating dto to entity
     //Return DTO: Confirmation: this has been created with the definitive details)
     //we don't want to return entities because of safety or LazyInitializationException
-    public InvoiceDTO createInvoice(InvoiceDTO dto) {
+    public InvoiceDTO createInvoice(InvoiceDTO dto, UUID userId) {
         //validation:
+        validateUserAccess(userId, dto.companyId());
+
         invoiceRepository.findByInvoiceNumber(dto.number()).ifPresent(existing -> {
             throw new IllegalArgumentException("Invoice number " + dto.number() + " already in use.");
         });
@@ -64,15 +63,21 @@ public class InvoiceService {
 
 
 
-// method to find an invoice by ID // TODO: validation
+// method to find an invoice by ID
     //if invoice is found, it gets mapped from entity to DTO.
     // the user receives the actual total amount since calculate total is integrated here also
     public Optional<InvoiceDTO> getInvoiceById(UUID id, UUID userId, UUID companyId) {
 
         validateUserAccess(userId, companyId);
 
-        return invoiceRepository.findByIdWithItems(id) //fetches the invoice and items in one question
-            .map(this::mapToDTO);
+        return invoiceRepository.findByIdWithItems(id)
+            .map(invoice -> {
+                if (!invoice.getCompany().getId().equals(companyId)) {
+                    throw new SecurityException("Access denied: Invoice does not belong to the specified company.");
+                }
+                return mapToDTO(invoice);
+            });
+
     }
 
 
