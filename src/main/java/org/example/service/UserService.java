@@ -37,6 +37,7 @@ public class UserService {
         user.setEmail(email);
         user.setPassword(PasswordEncoder.hash(password));
         user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
 
         userRepository.create(user);
         return toDto(user);

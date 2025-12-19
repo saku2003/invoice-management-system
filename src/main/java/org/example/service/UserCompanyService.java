@@ -29,8 +29,13 @@ public class UserCompanyService {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
-        UserCompany association = new UserCompany(user, company);
+        // Check if association already exists
+        UserCompanyId id = new UserCompanyId(userId, companyId);
+        if (userCompanyRepository.findById(id).isPresent()) {
+            throw new IllegalArgumentException("User is already associated with this company");
+        }
 
+        UserCompany association = new UserCompany(user, company);
         userCompanyRepository.create(association);
     }
 
