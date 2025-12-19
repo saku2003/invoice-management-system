@@ -66,5 +66,5 @@ public class Company {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Default
-    private Set<UserCompany> userCompanies = new HashSet<>();
+    private Set<CompanyUser> companyUsers = new HashSet<>();
 }

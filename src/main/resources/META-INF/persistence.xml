@@ -9,7 +9,7 @@
         <class>org.example.entity.Client</class>
         <class>org.example.entity.Invoice</class>
         <class>org.example.entity.InvoiceItem</class>
-        <class>org.example.entity.UserCompany</class>
+        <class>org.example.entity.CompanyUser</class>
         <properties>
             <!-- Database connection settings -->
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/invoice-db"/>

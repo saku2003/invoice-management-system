@@ -6,11 +6,11 @@ import org.example.dto.CompanyDTO;
 import org.example.dto.UserDTO;
 import org.example.repository.ClientRepository;
 import org.example.repository.CompanyRepository;
-import org.example.repository.UserCompanyRepository;
+import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
 import org.example.service.ClientService;
 import org.example.service.CompanyService;
-import org.example.service.UserCompanyService;
+import org.example.service.CompanyUserService;
 import org.example.service.UserService;
 import org.example.util.JpaUtil;
 
@@ -26,13 +26,13 @@ public class App {
         // Repository initialization
         UserRepository userRepository = new UserRepository(emf);
         CompanyRepository companyRepository = new CompanyRepository(emf);
-        UserCompanyRepository userCompanyRepository = new UserCompanyRepository(emf);
+        CompanyUserRepository companyUserRepository = new CompanyUserRepository(emf);
         ClientRepository clientRepository = new ClientRepository(emf);
 
         // Service initialization
         UserService userService = new UserService(userRepository);
         CompanyService companyService = new CompanyService(companyRepository);
-        UserCompanyService userCompanyService = new UserCompanyService(userRepository, userCompanyRepository, companyRepository);
+        CompanyUserService companyUserService = new CompanyUserService(userRepository, companyUserRepository, companyRepository);
         ClientService clientService = new ClientService(clientRepository, companyRepository);
 
 
@@ -75,14 +75,14 @@ public class App {
 
         System.out.println("\n=== ADD USERS TO COMPANY ===");
 
-        userCompanyService.addUserToCompany(companyId, user1Id);
-        userCompanyService.addUserToCompany(companyId, user2Id);
+        companyUserService.addUserToCompany(companyId, user1Id);
+        companyUserService.addUserToCompany(companyId, user2Id);
 
         System.out.println("Users added to company");
 
         System.out.println("\n=== REMOVE USER FROM COMPANY ===");
 
-        userCompanyService.deleteUserFromCompany(companyId, user2Id);
+        companyUserService.deleteUserFromCompany(companyId, user2Id);
 
         System.out.println("\n=== CLIENT CREATION ===");
 

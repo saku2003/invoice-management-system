@@ -2,23 +2,23 @@ package org.example.service;
 
 import org.example.entity.Company;
 import org.example.entity.User;
-import org.example.entity.UserCompany;
-import org.example.entity.UserCompanyId;
+import org.example.entity.CompanyUser;
+import org.example.entity.CompanyUserId;
 import org.example.repository.CompanyRepository;
-import org.example.repository.UserCompanyRepository;
+import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
 
 import java.util.UUID;
 
-public class UserCompanyService {
+public class CompanyUserService {
     private final UserRepository userRepository;
-    private final UserCompanyRepository userCompanyRepository;
+    private final CompanyUserRepository companyUserRepository;
     private final CompanyRepository companyRepository;
 
 
-    public UserCompanyService(UserRepository userRepository, UserCompanyRepository userCompanyRepository, CompanyRepository companyRepository) {
+    public CompanyUserService(UserRepository userRepository, CompanyUserRepository companyUserRepository, CompanyRepository companyRepository) {
         this.userRepository = userRepository;
-        this.userCompanyRepository = userCompanyRepository;
+        this.companyUserRepository = companyUserRepository;
         this.companyRepository = companyRepository;
     }
 
@@ -30,21 +30,21 @@ public class UserCompanyService {
             .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
         // Check if association already exists
-        UserCompanyId id = new UserCompanyId(userId, companyId);
-        if (userCompanyRepository.findById(id).isPresent()) {
+        CompanyUserId id = new CompanyUserId(userId, companyId);
+        if (companyUserRepository.findById(id).isPresent()) {
             throw new IllegalArgumentException("User is already associated with this company");
         }
 
-        UserCompany association = new UserCompany(user, company);
-        userCompanyRepository.create(association);
+        CompanyUser association = new CompanyUser(user, company);
+        companyUserRepository.create(association);
     }
 
     public void deleteUserFromCompany(UUID companyId, UUID userId) {
-        UserCompanyId id = new UserCompanyId(userId, companyId);
+        CompanyUserId id = new CompanyUserId(userId, companyId);
 
-        UserCompany userCompany = userCompanyRepository.findById(id)
+        CompanyUser companyUser = companyUserRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User is not part of company"));
 
-        userCompanyRepository.delete(userCompany);
+        companyUserRepository.delete(companyUser);
     }
 }
