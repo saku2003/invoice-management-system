@@ -56,6 +56,7 @@ public class UserService {
             .lastName(user.getLastName())
             .email(user.getEmail())
             .createdAt(user.getCreatedAt())
+            .updatedAt(user.getUpdatedAt())
             .build();
     }
 }
