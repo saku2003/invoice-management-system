@@ -142,7 +142,6 @@ public class InvoiceService {
         //returns the updated invoice as DTO
         return mapToDTO(updatedInvoice);
     }
-
     public List<InvoiceDTO> getInvoicesByClientForCompany(UUID clientId, UUID companyId, UUID userId) {
         //check if user is connected to the company
         validateUserAccess(userId, companyId);
