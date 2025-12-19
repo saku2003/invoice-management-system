@@ -20,4 +20,12 @@ public class CompanyUserRepository extends BaseRepository<CompanyUser, CompanyUs
                 .getResultList()
         );
     }
+
+    public List<CompanyUser> findByUserId(UUID userId) {
+        return executeRead(em ->
+            em.createQuery("SELECT cu FROM CompanyUser cu WHERE cu.user.id = :userId", CompanyUser.class)
+                .setParameter("userId", userId)
+                .getResultList()
+        );
+    }
 }

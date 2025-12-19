@@ -6,6 +6,7 @@ import org.example.entity.Company;
 import org.example.repository.ClientRepository;
 import org.example.repository.CompanyRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ClientService {
@@ -15,6 +16,13 @@ public class ClientService {
     public ClientService(ClientRepository clientRepository, CompanyRepository companyRepository) {
         this.clientRepository = clientRepository;
         this.companyRepository = companyRepository;
+    }
+
+    public List<ClientDTO> getClientsByCompany(UUID companyId) {
+        List<Client> clients = clientRepository.findByCompanyId(companyId);
+        return clients.stream()
+            .map(this::toDto)
+            .toList();
     }
 
     public ClientDTO createClient(UUID companyId,
