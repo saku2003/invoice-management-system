@@ -1,11 +1,13 @@
 package org.example.auth;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.dto.UserDTO;
 import org.example.entity.User;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
 
 
+@Slf4j
 public class AuthService {
     private final UserRepository userRepository;
     private final UserService userService;
@@ -16,13 +18,22 @@ public class AuthService {
     }
 
     public UserDTO authenticate(String email, String password) {
+
+        log.debug("Authentication attempt for email: {}", email);
+
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new IllegalStateException("Invalid email or password"));
+
+            .orElseThrow(() -> {
+                log.debug("Authentication failed: user not found for email={}", email);
+                return new IllegalStateException("Invalid email or password");
+            });
 
         if (!PasswordEncoder.matches(password, user.getPassword())) {
+            log.debug("Authentication failed: password mismatch for userId={}", user.getId());
             throw new IllegalStateException("Invalid email or password");
         }
 
+        log.info("Authentication successful for userId={}", user.getId());
         return userService.toDto(user);
     }
 }
