@@ -95,6 +95,16 @@ class CompanyServiceTest {
     }
 
     @Test
-    void deleteCompany() {
+    void testDeleteCompanySuccess() {
+        UUID companyId = UUID.randomUUID();
+
+        Company company = new Company();
+        company.setId(companyId);
+
+        when(companyRepository.findById(companyId)).thenReturn(Optional.of(company));
+
+        companyService.deleteCompany(companyId);
+
+        verify(companyRepository, times(1)).delete(company);
     }
 }
