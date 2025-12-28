@@ -79,10 +79,12 @@ public class CompanyUserService {
     }
 
     public List<CompanyUser> getCompanyUsers(UUID companyId) {
+        log.debug("Fetching all users for company {}", companyId);
         return companyUserRepository.findByCompanyId(companyId);
     }
 
     public List<CompanyUser> getUserCompanies(UUID userId) {
+        log.debug("Fetching all companies for user {}", userId);
         return companyUserRepository.findByUserId(userId);
     }
 }
