@@ -1,12 +1,21 @@
 package org.example.service;
 
+import org.example.dto.CompanyDTO;
+import org.example.entity.Company;
+import org.example.entity.CompanyUser;
+import org.example.entity.User;
 import org.example.repository.CompanyRepository;
 import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.mock;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
 class CompanyServiceTest {
 
@@ -24,7 +33,32 @@ class CompanyServiceTest {
     }
 
     @Test
-    void create() {
+    void testCreateCompanySuccess() {
+        UUID userId = UUID.randomUUID();
+
+        User user = new User();
+        user.setId(userId);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(companyRepository.existsByOrgNum("1234567890")).thenReturn(false);
+
+        CompanyDTO dto = companyService.create(
+            userId,
+            "1234567890",
+            "company@email.com",
+            "0701234567",
+            "TestCo",
+            "Street 1",
+            "City",
+            "Country"
+        );
+
+        assertNotNull(dto);
+        assertEquals("TestCo", dto.name());
+        assertEquals("1234567890", dto.orgNum());
+
+        verify(companyRepository, times(1)).create(any(Company.class));
+        verify(companyUserRepository, times(1)).create(any(CompanyUser.class));
     }
 
     @Test
