@@ -67,21 +67,6 @@ public class CompanyService {
         return toDto(company);
     }
 
-    public CompanyDTO toDto(Company company) {
-        return CompanyDTO.builder()
-            .id(company.getId())
-            .orgNum(company.getOrgNum())
-            .email(company.getEmail())
-            .phoneNumber(company.getPhoneNumber())
-            .name(company.getName())
-            .address(company.getAddress())
-            .city(company.getCity())
-            .country(company.getCountry())
-            .createdAt(company.getCreatedAt())
-            .updatedAt(company.getUpdatedAt())
-            .build();
-    }
-
     public CompanyDTO update(
         UUID id,
         String name,
@@ -91,6 +76,9 @@ public class CompanyService {
         String city,
         String country,
         String phoneNumber) {
+
+        log.debug("Company update started for id={}", id);
+
 
         Company company = companyRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + id));
@@ -117,5 +105,20 @@ public class CompanyService {
         Company company = companyRepository.findById(companyId)
             .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + companyId));
         companyRepository.delete(company);
+    }
+
+    public CompanyDTO toDto(Company company) {
+        return CompanyDTO.builder()
+            .id(company.getId())
+            .orgNum(company.getOrgNum())
+            .email(company.getEmail())
+            .phoneNumber(company.getPhoneNumber())
+            .name(company.getName())
+            .address(company.getAddress())
+            .city(company.getCity())
+            .country(company.getCountry())
+            .createdAt(company.getCreatedAt())
+            .updatedAt(company.getUpdatedAt())
+            .build();
     }
 }
