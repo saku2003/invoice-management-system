@@ -180,4 +180,18 @@ class CompanyServiceTest {
 
         verify(companyRepository, times(1)).delete(company);
     }
+
+    @Test
+    void testDeleteCompanyNotFound() {
+        UUID companyId = UUID.randomUUID();
+
+        when(companyRepository.findById(companyId)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(IllegalArgumentException.class,
+            () -> companyService.deleteCompany(companyId));
+
+        assertTrue(exception.getMessage().contains("Company not found"));
+
+        verify(companyRepository, never()).delete(any());
+    }
 }
