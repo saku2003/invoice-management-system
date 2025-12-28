@@ -9,6 +9,7 @@ import org.example.repository.CompanyRepository;
 import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -58,7 +59,6 @@ public class CompanyService {
 
         companyRepository.create(company);
 
-        // Automatically associate creator with the company
         CompanyUser creatorAssociation = new CompanyUser(creator, company);
         companyUserRepository.create(creatorAssociation);
 
@@ -67,18 +67,16 @@ public class CompanyService {
         return toDto(company);
     }
 
-    public CompanyDTO update(
-        UUID id,
-        String name,
-        String orgNum,
-        String email,
-        String address,
-        String city,
-        String country,
-        String phoneNumber) {
+    public CompanyDTO update(UUID id,
+                             String name,
+                             String orgNum,
+                             String email,
+                             String address,
+                             String city,
+                             String country,
+                             String phoneNumber) {
 
         log.debug("Company update started for id={}", id);
-
 
         Company company = companyRepository.findById(id)
             .orElseThrow(() -> {
@@ -99,7 +97,12 @@ public class CompanyService {
         if (country != null) company.setCountry(country);
         if (phoneNumber != null) company.setPhoneNumber(phoneNumber);
 
+        company.setUpdatedAt(LocalDateTime.now());
+
         companyRepository.update(company);
+
+        log.info("Company updated successfully with id={}", company.getId());
+
         return toDto(company);
     }
 
@@ -116,7 +119,6 @@ public class CompanyService {
 
         log.info("Company deleted successfully with id={}", companyId);
     }
-
 
     public CompanyDTO toDto(Company company) {
         return CompanyDTO.builder()
