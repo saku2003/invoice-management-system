@@ -33,6 +33,9 @@ public class CompanyService {
         String city,
         String country) {
 
+        log.debug("Company creation started: orgNum={}, creatorUserId={}", orgNum, creatorUserId);
+
+
         // Validate creator exists
         User creator = userRepository.findById(creatorUserId)
             .orElseThrow(() -> new IllegalArgumentException("Creator user not found with id: " + creatorUserId));
