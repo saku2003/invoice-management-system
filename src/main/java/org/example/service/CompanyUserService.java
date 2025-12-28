@@ -8,6 +8,7 @@ import org.example.entity.CompanyUserId;
 import org.example.repository.CompanyRepository;
 import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
+import org.example.util.LogUtil;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class CompanyUserService {
     }
 
     public void addUserToCompanyByEmail(UUID companyId, String email) {
-        log.debug("Add user to company requested: companyId={}, email={}", companyId, email);
+        log.debug("Add user to company requested: companyId={}, email={}", companyId, LogUtil.maskEmail(email));
 
         Company company = companyRepository.findById(companyId)
             .orElseThrow(() -> {
@@ -36,7 +37,7 @@ public class CompanyUserService {
 
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> {
-                log.warn("Add user failed: User not found with email={}", email);
+                log.warn("Add user failed: User not found with email={}", LogUtil.maskEmail(email));
                 return new IllegalArgumentException("User not found with email: " + email);
             });
 
