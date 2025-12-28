@@ -91,7 +91,6 @@ public class CompanyService {
             throw new IllegalArgumentException("Company with orgNum " + orgNum + " already exists");
         }
 
-
         if (name != null) company.setName(name);
         if (orgNum != null) company.setOrgNum(orgNum);
         if (email != null) company.setEmail(email);
@@ -105,10 +104,19 @@ public class CompanyService {
     }
 
     public void deleteCompany(UUID companyId) {
+        log.debug("Company deletion requested for companyId={}", companyId);
+
         Company company = companyRepository.findById(companyId)
-            .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + companyId));
+            .orElseThrow(() -> {
+                log.warn("Company deletion failed: Company not found for id={}", companyId);
+                return new IllegalArgumentException("Company not found with id: " + companyId);
+            });
+
         companyRepository.delete(company);
+
+        log.info("Company deleted successfully with id={}", companyId);
     }
+
 
     public CompanyDTO toDto(Company company) {
         return CompanyDTO.builder()
