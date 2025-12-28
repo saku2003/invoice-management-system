@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CompanyServiceTest {
@@ -62,7 +61,28 @@ class CompanyServiceTest {
     }
 
     @Test
-    void toDto() {
+    void testCreateCompanyUserNotFound() {
+        UUID userId = UUID.randomUUID();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            companyService.create(
+                userId,
+                "1234567890",
+                "company@email.com",
+                "0701234567",
+                "TestCo",
+                "Street 1",
+                "City",
+                "Country"
+            )
+        );
+
+        assertTrue(exception.getMessage().contains("Creator user not found"));
+
+        verify(companyRepository, never()).create(any());
+        verify(companyUserRepository, never()).create(any());
     }
 
     @Test
