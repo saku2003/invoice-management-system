@@ -1,4 +1,4 @@
-package org.example;
+package org.example.integration;
 
 import org.example.auth.AuthService;
 import org.example.dto.UserDTO;
