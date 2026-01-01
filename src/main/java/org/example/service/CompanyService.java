@@ -9,7 +9,6 @@ import org.example.repository.CompanyRepository;
 import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -68,7 +67,7 @@ public class CompanyService {
 
         log.info("Company created successfully with id={} by userId={}", company.getId(), creatorUserId);
 
-        return toDto(company);
+        return CompanyDTO.fromEntity(company);
     }
 
     public CompanyDTO update(UUID id,
@@ -103,13 +102,11 @@ public class CompanyService {
         if (country != null) company.setCountry(country);
         if (phoneNumber != null) company.setPhoneNumber(phoneNumber);
 
-        company.setUpdatedAt(LocalDateTime.now());
-
         companyRepository.update(company);
 
         log.info("Company updated successfully with id={}", company.getId());
 
-        return toDto(company);
+        return CompanyDTO.fromEntity(company);
     }
 
     public Company getCompanyEntity(UUID companyId) {
@@ -129,20 +126,5 @@ public class CompanyService {
         companyRepository.delete(company);
 
         log.info("Company deleted successfully with id={}", companyId);
-    }
-
-    public CompanyDTO toDto(Company company) {
-        return CompanyDTO.builder()
-            .id(company.getId())
-            .orgNum(company.getOrgNum())
-            .email(company.getEmail())
-            .phoneNumber(company.getPhoneNumber())
-            .name(company.getName())
-            .address(company.getAddress())
-            .city(company.getCity())
-            .country(company.getCountry())
-            .createdAt(company.getCreatedAt())
-            .updatedAt(company.getUpdatedAt())
-            .build();
     }
 }

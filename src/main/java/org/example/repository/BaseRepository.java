@@ -3,7 +3,6 @@ package org.example.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -74,13 +73,6 @@ public abstract class BaseRepository <T, ID> {
 
     public Optional<T> findById(ID id) {
         return executeRead(em -> Optional.ofNullable(em.find(entityClass, id)));
-    }
-
-    public List<T> findAll() {
-        return executeRead(em ->
-            em.createQuery("SELECT e FROM " + entityClass.getSimpleName() + " e", entityClass)
-                .getResultList()
-        );
     }
 
     public boolean existsById(ID id) {
