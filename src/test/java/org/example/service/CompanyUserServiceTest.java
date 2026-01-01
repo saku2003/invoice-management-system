@@ -181,4 +181,5 @@ class CompanyUserServiceTest {
 
         assertEquals(3, result.size());
     }
+
 }
