@@ -123,6 +123,20 @@ class CompanyUserServiceTest {
     }
 
     @Test
+    void deleteUserFromCompany_notFound() {
+        UUID companyId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        CompanyUserId id = new CompanyUserId(userId, companyId);
+
+        when(companyUserRepository.findById(id)).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class,
+            () -> companyUserService.deleteUserFromCompany(companyId, userId));
+
+        assertTrue(ex.getMessage().contains("User is not part of company"));
+    }
+
+    @Test
     void isUserAssociatedWithCompany() {
     }
 
