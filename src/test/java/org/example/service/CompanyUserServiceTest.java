@@ -149,6 +149,18 @@ class CompanyUserServiceTest {
     }
 
     @Test
+    void isUserAssociatedWithCompany_false() {
+        UUID companyId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        CompanyUserId id = new CompanyUserId(userId, companyId);
+        when(companyUserRepository.findById(id)).thenReturn(Optional.empty());
+
+        boolean result = companyUserService.isUserAssociatedWithCompany(userId, companyId);
+
+        assertFalse(result);
+    }
+
+    @Test
     void getCompanyUsers() {
     }
 
