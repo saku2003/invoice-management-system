@@ -9,7 +9,6 @@ import org.example.repository.CompanyRepository;
 import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -102,8 +101,6 @@ public class CompanyService {
         if (city != null) company.setCity(city);
         if (country != null) company.setCountry(country);
         if (phoneNumber != null) company.setPhoneNumber(phoneNumber);
-
-        company.setUpdatedAt(LocalDateTime.now());
 
         companyRepository.update(company);
 
