@@ -1,10 +1,12 @@
 package org.example.dto;
 
+import lombok.Builder;
 import org.example.entity.Company;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Builder
 public record CompanyDTO(
     UUID id,
     String orgNum,
@@ -18,17 +20,17 @@ public record CompanyDTO(
     LocalDateTime updatedAt
 ) {
     public static CompanyDTO fromEntity(Company company) {
-        return new CompanyDTO(
-            company.getId(),
-            company.getOrgNum(),
-            company.getEmail(),
-            company.getPhoneNumber(),
-            company.getName(),
-            company.getAddress(),
-            company.getCity(),
-            company.getCountry(),
-            company.getCreatedAt(),
-            company.getUpdatedAt()
-        );
+        return CompanyDTO.builder()
+            .id(company.getId())
+            .orgNum(company.getOrgNum())
+            .email(company.getEmail())
+            .phoneNumber(company.getPhoneNumber())
+            .name(company.getName())
+            .address(company.getAddress())
+            .city(company.getCity())
+            .country(company.getCountry())
+            .createdAt(company.getCreatedAt())
+            .updatedAt(company.getUpdatedAt())
+            .build();
     }
 }
