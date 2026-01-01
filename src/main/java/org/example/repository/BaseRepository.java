@@ -3,7 +3,6 @@ package org.example.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 

@@ -41,27 +41,30 @@ public class Company {
     private String city;
     private String country;
 
-    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
+    @ToString.Exclude
     private Set<Client> clients = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
+    @ToString.Exclude
     private Set<Invoice> invoices = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
+    @ToString.Exclude
     private Set<CompanyUser> companyUsers = new HashSet<>();
 
-    public static Company fromDto(CompanyDTO dto) {
+    public static Company fromDto(org.example.dto.CompanyDTO dto) {
         return Company.builder()
             .name(dto.name())
             .orgNum(dto.orgNum())
