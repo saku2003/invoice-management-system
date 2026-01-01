@@ -3,6 +3,7 @@ import lombok.Builder.Default;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.dto.CompanyDTO;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -28,7 +29,7 @@ public class Company {
     @Column(name = "org_num", nullable = false, unique = true)
     private String orgNum;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Column(name = "phone_number")
@@ -44,27 +45,28 @@ public class Company {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Default
+    @Builder.Default
     private Set<Client> clients = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Default
+    @Builder.Default
     private Set<Invoice> invoices = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Default
+    @Builder.Default
     private Set<CompanyUser> companyUsers = new HashSet<>();
+
+    public static Company fromDto(CompanyDTO dto) {
+        return Company.builder()
+            .id(dto.id())
+            .name(dto.name())
+            .orgNum(dto.orgNum())
+            .email(dto.email())
+            .phoneNumber(dto.phoneNumber())
+            .address(dto.address())
+            .city(dto.city())
+            .country(dto.country())
+            .build();
+    }
 }

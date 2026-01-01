@@ -68,7 +68,7 @@ public class CompanyService {
 
         log.info("Company created successfully with id={} by userId={}", company.getId(), creatorUserId);
 
-        return toDto(company);
+        return CompanyDTO.fromEntity(company);
     }
 
     public CompanyDTO update(UUID id,
@@ -109,7 +109,7 @@ public class CompanyService {
 
         log.info("Company updated successfully with id={}", company.getId());
 
-        return toDto(company);
+        return CompanyDTO.fromEntity(company);
     }
 
     public Company getCompanyEntity(UUID companyId) {
@@ -129,20 +129,5 @@ public class CompanyService {
         companyRepository.delete(company);
 
         log.info("Company deleted successfully with id={}", companyId);
-    }
-
-    public CompanyDTO toDto(Company company) {
-        return CompanyDTO.builder()
-            .id(company.getId())
-            .orgNum(company.getOrgNum())
-            .email(company.getEmail())
-            .phoneNumber(company.getPhoneNumber())
-            .name(company.getName())
-            .address(company.getAddress())
-            .city(company.getCity())
-            .country(company.getCountry())
-            .createdAt(company.getCreatedAt())
-            .updatedAt(company.getUpdatedAt())
-            .build();
     }
 }
