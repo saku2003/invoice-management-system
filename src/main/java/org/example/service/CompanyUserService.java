@@ -27,6 +27,15 @@ public class CompanyUserService {
     }
 
     public void addUserToCompanyByEmail(UUID companyId, String email) {
+        if (companyId == null) {
+            log.warn("Add user failed: companyId is null");
+            throw new IllegalArgumentException("companyId cannot be null");
+        }
+        if (email == null) {
+            log.warn("Add user failed: email is null");
+            throw new IllegalArgumentException("email cannot be null");
+        }
+
         log.debug("Add user to company requested: companyId={}, email={}", companyId, LogUtil.maskEmail(email));
 
         Company company = companyRepository.findById(companyId)

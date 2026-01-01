@@ -7,6 +7,8 @@ import org.example.entity.User;
 import org.example.repository.CompanyRepository;
 import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,19 +38,29 @@ class CompanyUserServiceTest {
     @InjectMocks
     private CompanyUserService companyUserService;
 
-    @Test
-    void addUserToCompanyByEmail_success() {
-        UUID companyId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        String email = "test@email.com";
+    private UUID companyId;
+    private UUID userId;
+    private String email;
+    private Company company;
+    private User user;
 
-        Company company = new Company();
+    @BeforeEach
+    void setup() {
+        companyId = UUID.randomUUID();
+        userId = UUID.randomUUID();
+        email = "test@email.com";
+
+        company = new Company();
         company.setId(companyId);
 
-        User user = new User();
+        user = new User();
         user.setId(userId);
         user.setEmail(email);
+    }
 
+    @Test
+    @DisplayName("Should add user to company successfully")
+    void addUserToCompanyByEmail_success() {
         when(companyRepository.findById(companyId)).thenReturn(Optional.of(company));
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(companyUserRepository.findById(new CompanyUserId(userId, companyId)))
@@ -55,29 +68,29 @@ class CompanyUserServiceTest {
 
         companyUserService.addUserToCompanyByEmail(companyId, email);
 
-        verify(companyUserRepository, times(1)).create(any(CompanyUser.class));
+        verify(companyUserRepository).create(argThat(cu ->
+            cu.getUser().equals(user) &&
+                cu.getCompany().equals(company)
+        ));
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
     @Test
+    @DisplayName("Should throw exception if company not found")
     void addUserToCompanyByEmail_companyNotFound() {
-        UUID companyId = UUID.randomUUID();
-        String email = "test@email.com";
-
         when(companyRepository.findById(companyId)).thenReturn(Optional.empty());
 
         Exception ex = assertThrows(IllegalArgumentException.class,
             () -> companyUserService.addUserToCompanyByEmail(companyId, email));
 
         assertTrue(ex.getMessage().contains("Company not found"));
+        verify(companyRepository).findById(companyId);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
     @Test
+    @DisplayName("Should throw exception if user not found")
     void addUserToCompanyByEmail_userNotFound() {
-        UUID companyId = UUID.randomUUID();
-        String email = "test@email.com";
-        Company company = new Company();
-        company.setId(companyId);
-
         when(companyRepository.findById(companyId)).thenReturn(Optional.of(company));
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
@@ -85,20 +98,15 @@ class CompanyUserServiceTest {
             () -> companyUserService.addUserToCompanyByEmail(companyId, email));
 
         assertTrue(ex.getMessage().contains("User not found"));
+        verify(companyRepository).findById(companyId);
+        verify(userRepository).findByEmail(email);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
     @Test
+    @DisplayName("Should throw exception if user already associated")
     void addUserToCompanyByEmail_userAlreadyAssociated() {
-        UUID companyId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        String email = "test@email.com";
-        Company company = new Company();
-        company.setId(companyId);
-        User user = new User();
-        user.setId(userId);
-        user.setEmail(email);
         CompanyUserId id = new CompanyUserId(userId, companyId);
-
         when(companyRepository.findById(companyId)).thenReturn(Optional.of(company));
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(companyUserRepository.findById(id)).thenReturn(Optional.of(new CompanyUser()));
@@ -107,79 +115,130 @@ class CompanyUserServiceTest {
             () -> companyUserService.addUserToCompanyByEmail(companyId, email));
 
         assertTrue(ex.getMessage().contains("already associated"));
+        verify(companyRepository).findById(companyId);
+        verify(userRepository).findByEmail(email);
+        verify(companyUserRepository).findById(id);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
     @Test
+    @DisplayName("Should throw exception for null companyId")
+    void addUserToCompanyByEmail_nullCompanyId_throws() {
+        assertThrows(IllegalArgumentException.class,
+            () -> companyUserService.addUserToCompanyByEmail(null, email));
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
+    }
+
+    @Test
+    @DisplayName("Should throw exception for null email")
+    void addUserToCompanyByEmail_nullEmail_throws() {
+        assertThrows(IllegalArgumentException.class,
+            () -> companyUserService.addUserToCompanyByEmail(companyId, null));
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
+    }
+
+    @Test
+    @DisplayName("Should delete user from company successfully")
     void deleteUserFromCompany_success() {
-        UUID companyId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
         CompanyUserId id = new CompanyUserId(userId, companyId);
         CompanyUser cu = new CompanyUser();
         when(companyUserRepository.findById(id)).thenReturn(Optional.of(cu));
 
         companyUserService.deleteUserFromCompany(companyId, userId);
 
-        verify(companyUserRepository, times(1)).delete(cu);
+        verify(companyUserRepository).delete(argThat(u -> u.equals(cu)));
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
     @Test
+    @DisplayName("Should throw exception if user not part of company")
     void deleteUserFromCompany_notFound() {
-        UUID companyId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
         CompanyUserId id = new CompanyUserId(userId, companyId);
-
         when(companyUserRepository.findById(id)).thenReturn(Optional.empty());
 
         Exception ex = assertThrows(IllegalArgumentException.class,
             () -> companyUserService.deleteUserFromCompany(companyId, userId));
 
         assertTrue(ex.getMessage().contains("User is not part of company"));
+        verify(companyUserRepository).findById(id);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
     @Test
+    @DisplayName("Should return true if user associated with company")
     void isUserAssociatedWithCompany_true() {
-        UUID companyId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
         CompanyUserId id = new CompanyUserId(userId, companyId);
         when(companyUserRepository.findById(id)).thenReturn(Optional.of(new CompanyUser()));
 
         boolean result = companyUserService.isUserAssociatedWithCompany(userId, companyId);
 
         assertTrue(result);
+        verify(companyUserRepository).findById(id);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
     @Test
+    @DisplayName("Should return false if user not associated with company")
     void isUserAssociatedWithCompany_false() {
-        UUID companyId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
         CompanyUserId id = new CompanyUserId(userId, companyId);
         when(companyUserRepository.findById(id)).thenReturn(Optional.empty());
 
         boolean result = companyUserService.isUserAssociatedWithCompany(userId, companyId);
 
         assertFalse(result);
+        verify(companyUserRepository).findById(id);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
     @Test
+    @DisplayName("Should return all users of a company")
     void getCompanyUsers_success() {
-        UUID companyId = UUID.randomUUID();
         List<CompanyUser> users = List.of(new CompanyUser(), new CompanyUser());
         when(companyUserRepository.findByCompanyId(companyId)).thenReturn(users);
 
         List<CompanyUser> result = companyUserService.getCompanyUsers(companyId);
 
         assertEquals(2, result.size());
+        assertTrue(result.containsAll(users));
+        verify(companyUserRepository).findByCompanyId(companyId);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
     @Test
+    @DisplayName("Should return empty list if company has no users")
+    void getCompanyUsers_empty() {
+        when(companyUserRepository.findByCompanyId(companyId)).thenReturn(List.of());
+
+        List<CompanyUser> result = companyUserService.getCompanyUsers(companyId);
+
+        assertTrue(result.isEmpty());
+        verify(companyUserRepository).findByCompanyId(companyId);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
+    }
+
+    @Test
+    @DisplayName("Should return all companies of a user")
     void getUserCompanies_success() {
-        UUID userId = UUID.randomUUID();
         List<CompanyUser> companies = List.of(new CompanyUser(), new CompanyUser(), new CompanyUser());
         when(companyUserRepository.findByUserId(userId)).thenReturn(companies);
 
         List<CompanyUser> result = companyUserService.getUserCompanies(userId);
 
         assertEquals(3, result.size());
+        assertTrue(result.containsAll(companies));
+        verify(companyUserRepository).findByUserId(userId);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
     }
 
+    @Test
+    @DisplayName("Should return empty list if user is not part of any company")
+    void getUserCompanies_empty() {
+        when(companyUserRepository.findByUserId(userId)).thenReturn(List.of());
+
+        List<CompanyUser> result = companyUserService.getUserCompanies(userId);
+
+        assertTrue(result.isEmpty());
+        verify(companyUserRepository).findByUserId(userId);
+        verifyNoMoreInteractions(userRepository, companyRepository, companyUserRepository);
+    }
 }
