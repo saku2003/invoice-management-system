@@ -1,11 +1,10 @@
-package org.example;
+package org.example.service;
 
 import org.example.dto.ClientDTO;
 import org.example.entity.Client;
 import org.example.entity.Company;
 import org.example.repository.ClientRepository;
 import org.example.repository.CompanyRepository;
-import org.example.service.ClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +16,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ClientTest {
+public class ClientServiceTest {
 
     private ClientRepository clientRepository;
     private ClientService clientService;
