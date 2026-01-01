@@ -110,7 +110,16 @@ class CompanyUserServiceTest {
     }
 
     @Test
-    void deleteUserFromCompany() {
+    void deleteUserFromCompany_success() {
+        UUID companyId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        CompanyUserId id = new CompanyUserId(userId, companyId);
+        CompanyUser cu = new CompanyUser();
+        when(companyUserRepository.findById(id)).thenReturn(Optional.of(cu));
+
+        companyUserService.deleteUserFromCompany(companyId, userId);
+
+        verify(companyUserRepository, times(1)).delete(cu);
     }
 
     @Test
