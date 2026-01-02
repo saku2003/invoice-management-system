@@ -1,6 +1,7 @@
 package org.example.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.auth.PasswordEncoder;
 import org.example.entity.user.CreateUserDTO;
 import org.example.entity.user.UserDTO;
 import org.example.entity.user.User;
@@ -47,6 +48,7 @@ public class UserService {
         }
 
         User user = User.fromDTO(dto);
+        user.setPassword(PasswordEncoder.hash(dto.password()));
         userRepository.create(user);
 
         log.info("User registered successfully with id={}", user.getId());

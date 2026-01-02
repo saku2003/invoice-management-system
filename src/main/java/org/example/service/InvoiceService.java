@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.example.dto.InvoiceDTO;
 import org.example.dto.InvoiceItemDTO;
 import org.example.entity.*;
+import org.example.entity.client.Client;
 import org.example.repository.ClientRepository;
 import org.example.repository.CompanyRepository;
 import org.example.repository.InvoiceRepository;

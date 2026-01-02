@@ -1,8 +1,10 @@
 package org.example;
 
 import jakarta.persistence.EntityManagerFactory;
-import org.example.dto.ClientDTO;
+import org.example.entity.client.ClientDTO;
 import org.example.dto.CompanyDTO;
+import org.example.entity.client.CreateClientDTO;
+import org.example.entity.client.UpdateClientDTO;
 import org.example.entity.user.CreateUserDTO;
 import org.example.entity.user.UserDTO;
 import org.example.entity.Company;
@@ -347,6 +349,7 @@ public class CliApp {
 
     private void createClient() {
         System.out.println("\n--- Create Client ---");
+
         System.out.print("First Name: ");
         String firstName = scanner.nextLine().trim();
 
@@ -369,23 +372,28 @@ public class CliApp {
         String phoneNumber = scanner.nextLine().trim();
 
         try {
-            ClientDTO client = clientService.createClient(
+            CreateClientDTO dto = new CreateClientDTO(
                 currentCompanyId,
                 firstName,
                 lastName,
                 email,
                 address,
-                city,
                 country,
+                city,
                 phoneNumber
             );
+
+            ClientDTO client = clientService.createClient(dto);
+
             System.out.println("✓ Client created successfully!");
             System.out.println("  ID: " + client.id());
             System.out.println("  Name: " + client.firstName() + " " + client.lastName());
+
         } catch (Exception e) {
             System.out.println("✗ Client creation failed: " + e.getMessage());
         }
     }
+
 
     private void updateClient() {
         System.out.print("\nEnter Client ID: ");
@@ -394,7 +402,7 @@ public class CliApp {
         try {
             UUID clientId = UUID.fromString(clientIdStr);
 
-            // Verify client belongs to current company
+            // Verify client exists
             var clientOpt = clientService.findById(clientId);
             if (clientOpt.isEmpty()) {
                 System.out.println("✗ Client not found.");
@@ -402,6 +410,7 @@ public class CliApp {
             }
 
             var client = clientOpt.get();
+
             // Verify client belongs to current company
             if (!client.getCompany().getId().equals(currentCompanyId)) {
                 System.out.println("✗ Client does not belong to current company.");
@@ -409,6 +418,7 @@ public class CliApp {
             }
 
             System.out.println("Leave blank to keep current value.");
+
             System.out.print("First Name [" + (client.getFirstName() != null ? client.getFirstName() : "") + "]: ");
             String firstName = scanner.nextLine().trim();
 
@@ -430,16 +440,18 @@ public class CliApp {
             System.out.print("Phone Number [" + (client.getPhoneNumber() != null ? client.getPhoneNumber() : "") + "]: ");
             String phoneNumber = scanner.nextLine().trim();
 
-            ClientDTO updated = clientService.updateClient(
+            UpdateClientDTO updateDto = new UpdateClientDTO(
                 clientId,
                 firstName.isEmpty() ? null : firstName,
                 lastName.isEmpty() ? null : lastName,
                 email.isEmpty() ? null : email,
                 address.isEmpty() ? null : address,
-                city.isEmpty() ? null : city,
                 country.isEmpty() ? null : country,
+                city.isEmpty() ? null : city,
                 phoneNumber.isEmpty() ? null : phoneNumber
             );
+
+            ClientDTO updated = clientService.updateClient(updateDto);
 
             System.out.println("✓ Client updated successfully!");
             System.out.println("  Name: " + updated.firstName() + " " + updated.lastName());
@@ -447,6 +459,7 @@ public class CliApp {
             System.out.println("✗ Client update failed: " + e.getMessage());
         }
     }
+
 
     private void deleteClient() {
         System.out.print("\nEnter Client ID to delete: ");

@@ -6,7 +6,7 @@
     <persistence-unit name="jpa-hibernate-mysql">
         <class>org.example.entity.user.User</class>
         <class>org.example.entity.Company</class>
-        <class>org.example.entity.Client</class>
+        <class>org.example.entity.client.Client</class>
         <class>org.example.entity.Invoice</class>
         <class>org.example.entity.InvoiceItem</class>
         <class>org.example.entity.CompanyUser</class>

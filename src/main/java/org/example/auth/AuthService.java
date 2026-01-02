@@ -38,6 +38,6 @@ public class AuthService {
         }
 
         log.info("Authentication successful for userId={}", user.getId());
-        return userService.toDto(user);
+        return UserDTO.fromEntity(user);
     }
 }
