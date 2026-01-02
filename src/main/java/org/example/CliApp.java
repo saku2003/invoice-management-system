@@ -446,8 +446,8 @@ public class CliApp {
                 lastName.isEmpty() ? null : lastName,
                 email.isEmpty() ? null : email,
                 address.isEmpty() ? null : address,
-                country.isEmpty() ? null : country,
                 city.isEmpty() ? null : city,
+                country.isEmpty() ? null : country,
                 phoneNumber.isEmpty() ? null : phoneNumber
             );
 

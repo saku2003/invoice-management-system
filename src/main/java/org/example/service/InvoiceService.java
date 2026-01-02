@@ -1,15 +1,14 @@
 package org.example.service;
 
+import org.example.entity.client.Client;
 import org.example.entity.company.Company;
 import org.example.entity.invoice.*;
-import org.example.entity.client.Client;
 import org.example.repository.ClientRepository;
 import org.example.repository.CompanyRepository;
 import org.example.repository.InvoiceRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 public class InvoiceService {
@@ -67,7 +66,6 @@ public class InvoiceService {
     }
 
 
-
     public Optional<InvoiceDTO> getInvoiceById(UUID id) {
         return invoiceRepository.findByIdWithItems(id)
             .map(InvoiceDTO::fromEntity);
@@ -85,22 +83,6 @@ public class InvoiceService {
             throw new IllegalArgumentException("Invoice not found");
         }
         invoiceRepository.deleteById(id);
-    }
-
-    public InvoiceDTO updateInvoiceItems(UUID id, Set<InvoiceItemDTO> items) {
-        Invoice invoice = invoiceRepository.findByIdWithItems(id)
-            .orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
-
-        invoice.clearItems();
-        items.forEach(dto -> {
-            InvoiceItem item = new InvoiceItem();
-            item.setQuantity(dto.quantity());
-            item.setUnitPrice(dto.unitPrice());
-            invoice.addItem(item);
-        });
-
-        Invoice updated = invoiceRepository.update(invoice);
-        return InvoiceDTO.fromEntity(updated);
     }
 
     public List<InvoiceDTO> getInvoicesByCompany(UUID companyId) {
