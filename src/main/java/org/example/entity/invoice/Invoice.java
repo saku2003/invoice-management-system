@@ -74,23 +74,26 @@ public class Invoice {
     }
 
     public static Invoice fromDTO(CreateInvoiceDTO dto, Company company, Client client) {
-        Invoice.InvoiceBuilder builder = Invoice.builder()
+        Invoice invoice = Invoice.builder()
             .company(company)
             .client(client)
             .number(dto.number())
             .dueDate(dto.dueDate())
-            .status(InvoiceStatus.CREATED);
+            .status(InvoiceStatus.CREATED)
+            .invoiceItems(new ArrayList<>())
+            .amount(BigDecimal.ZERO)
+            .vatAmount(BigDecimal.ZERO)
+            .build();
 
         if (dto.items() != null) {
             dto.items().forEach(itemDTO -> {
                 InvoiceItem item = new InvoiceItem();
                 item.setQuantity(itemDTO.quantity());
                 item.setUnitPrice(itemDTO.unitPrice());
-                builder.invoiceItems.add(item);
+                invoice.addItem(item);
             });
         }
 
-        Invoice invoice = builder.build();
         invoice.recalcTotals();
         return invoice;
     }
