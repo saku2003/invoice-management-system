@@ -116,8 +116,9 @@ public class InvoiceService {
         validateUserAccess(userId, companyId);
 
         invoiceRepository.findById(id).ifPresent(invoice -> {
-            log.error("SECURITY ALERT: User {} tried to delete invoice {} from company {}", userId, id, invoice.getCompany().getId());
+
             if (!invoice.getCompany().getId().equals(companyId)) {
+                log.error("SECURITY ALERT: User {} tried to delete invoice {} from company {}", userId, id, invoice.getCompany().getId());
                 throw new SecurityException("Unauthorized");
             }
             invoiceRepository.delete(invoice);
