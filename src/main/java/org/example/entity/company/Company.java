@@ -65,15 +65,24 @@ public class Company {
     @ToString.Exclude
     private Set<CompanyUser> companyUsers = new HashSet<>();
 
-    public static Company fromDto(CompanyDTO dto) {
+    public static Company fromDTO(CreateCompanyDTO dto) {
         return Company.builder()
-            .name(dto.name())
             .orgNum(dto.orgNum())
             .email(dto.email())
             .phoneNumber(dto.phoneNumber())
+            .name(dto.name())
             .address(dto.address())
             .city(dto.city())
             .country(dto.country())
             .build();
+    }
+
+    public void update(UpdateCompanyDTO dto) {
+        if (dto.email() != null) this.email = dto.email();
+        if (dto.phoneNumber() != null) this.phoneNumber = dto.phoneNumber();
+        if (dto.name() != null) this.name = dto.name();
+        if (dto.address() != null) this.address = dto.address();
+        if (dto.city() != null) this.city = dto.city();
+        if (dto.country() != null) this.country = dto.country();
     }
 }
