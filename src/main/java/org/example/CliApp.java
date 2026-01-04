@@ -5,6 +5,7 @@ import org.example.entity.client.ClientDTO;
 import org.example.entity.company.CompanyDTO;
 import org.example.entity.client.CreateClientDTO;
 import org.example.entity.client.UpdateClientDTO;
+import org.example.entity.company.CreateCompanyDTO;
 import org.example.entity.user.CreateUserDTO;
 import org.example.entity.user.UserDTO;
 import org.example.entity.company.Company;
@@ -210,9 +211,7 @@ public class CliApp {
         String country = scanner.nextLine().trim();
 
         try {
-            // Creator is automatically associated with the company
-            currentCompany = companyService.create(
-                currentUserId,
+            CreateCompanyDTO createDto = new CreateCompanyDTO(
                 orgNum,
                 email,
                 phoneNumber,
@@ -221,11 +220,15 @@ public class CliApp {
                 city,
                 country
             );
+
+            currentCompany = companyService.create(currentUserId, createDto);
             currentCompanyId = currentCompany.id();
+
             System.out.println("✓ Company created successfully!");
             System.out.println("  Company: " + currentCompany.name() + " (" + currentCompany.orgNum() + ")");
             System.out.println("  You have been automatically associated with this company.");
             return true;
+
         } catch (Exception e) {
             System.out.println("✗ Company creation failed: " + e.getMessage());
             return false;
@@ -837,7 +840,7 @@ public class CliApp {
             currentCompany = companyService.update(
                 currentCompanyId,
                 name.isEmpty() ? null : name,
-                null, // orgNum - typically shouldn't be changed
+                null,
                 email.isEmpty() ? null : email,
                 address.isEmpty() ? null : address,
                 city.isEmpty() ? null : city,

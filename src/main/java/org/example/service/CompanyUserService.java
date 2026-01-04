@@ -45,7 +45,6 @@ public class CompanyUserService {
             });
 
         CompanyUserId id = new CompanyUserId(user.getId(), companyId);
-
         if (companyUserRepository.findById(id).isPresent()) {
             log.warn("Add user failed: User {} already associated with company {}", user.getId(), companyId);
             throw new IllegalArgumentException("User is already associated with this company");
