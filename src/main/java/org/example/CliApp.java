@@ -2,14 +2,11 @@ package org.example;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.example.entity.client.ClientDTO;
-import org.example.entity.company.CompanyDTO;
+import org.example.entity.company.*;
 import org.example.entity.client.CreateClientDTO;
 import org.example.entity.client.UpdateClientDTO;
-import org.example.entity.company.CreateCompanyDTO;
 import org.example.entity.user.CreateUserDTO;
 import org.example.entity.user.UserDTO;
-import org.example.entity.company.Company;
-import org.example.entity.company.CompanyUser;
 import org.example.repository.ClientRepository;
 import org.example.repository.CompanyRepository;
 import org.example.repository.CompanyUserRepository;
@@ -837,16 +834,18 @@ public class CliApp {
         String phoneNumber = scanner.nextLine().trim();
 
         try {
-            currentCompany = companyService.update(
+            UpdateCompanyDTO updateDto = new UpdateCompanyDTO(
                 currentCompanyId,
                 name.isEmpty() ? null : name,
-                null,
                 email.isEmpty() ? null : email,
                 address.isEmpty() ? null : address,
                 city.isEmpty() ? null : city,
                 country.isEmpty() ? null : country,
                 phoneNumber.isEmpty() ? null : phoneNumber
             );
+
+            currentCompany = companyService.update(updateDto);
+
             System.out.println("✓ Company updated successfully!");
         } catch (Exception e) {
             System.out.println("✗ Company update failed: " + e.getMessage());
