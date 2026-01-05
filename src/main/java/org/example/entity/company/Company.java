@@ -20,6 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@ToString(exclude = {"clients", "invoices", "companyUsers"})
 public class Company {
 
     @Id
@@ -52,17 +53,14 @@ public class Company {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
-    @ToString.Exclude
     private Set<Client> clients = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
-    @ToString.Exclude
     private Set<Invoice> invoices = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
-    @ToString.Exclude
     private Set<CompanyUser> companyUsers = new HashSet<>();
 
     public static Company fromDTO(CreateCompanyDTO dto) {

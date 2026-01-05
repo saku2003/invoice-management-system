@@ -60,5 +60,4 @@ public class Client {
             .phoneNumber(dto.phoneNumber())
             .build();
     }
-
 }

@@ -23,10 +23,8 @@ public class CompanyService {
 
     public CompanyDTO create(UUID creatorUserId, CreateCompanyDTO dto) {
         if (creatorUserId == null) throw new IllegalArgumentException("Creator userId cannot be null");
-        if (dto.orgNum() == null || dto.orgNum().isBlank())
-            throw new IllegalArgumentException("OrgNum cannot be null or blank");
-        if (dto.name() == null || dto.name().isBlank())
-            throw new IllegalArgumentException("Company name cannot be null or blank");
+        if (dto.orgNum() == null || dto.orgNum().isBlank()) throw new IllegalArgumentException("OrgNum cannot be null or blank");
+        if (dto.name() == null || dto.name().isBlank()) throw new IllegalArgumentException("Company name cannot be null or blank");
 
         log.debug("Company creation started: orgNum={}, creatorUserId={}", dto.orgNum(), creatorUserId);
 
@@ -48,6 +46,7 @@ public class CompanyService {
         companyUserRepository.create(association);
 
         log.info("Company created successfully with id={} by userId={}", company.getId(), creatorUserId);
+
         return CompanyDTO.fromEntity(company);
     }
 
