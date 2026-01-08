@@ -68,7 +68,7 @@ public class CliApp {
         this.clientRepository = new ClientRepository(emf);
         this.invoiceRepository = new InvoiceRepository(emf);
 
-        this.userService = new UserService(userRepository);
+        this.userService = new UserService(userRepository, companyUserRepository);
         this.authService = new AuthService(userRepository, userService);
         this.companyService = new CompanyService(companyRepository, companyUserRepository, userRepository);
         this.companyUserService = new CompanyUserService(userRepository, companyUserRepository, companyRepository);
@@ -89,7 +89,14 @@ public class CliApp {
             }
         }
 
-        // Step 2: Company setup (with retry)
+        // Step 2: Account setting
+        if (!accountMenu()) {
+            System.out.println("Account deleted. Returning to authentication...");
+            run();
+            return;
+        }
+
+        // Step 3: Company setup (with retry)
         while (!setupCompany()) {
             System.out.println("\nWould you like to try again? (yes/no): ");
             String retry = scanner.nextLine().trim().toLowerCase();
@@ -180,11 +187,40 @@ public class CliApp {
         return scanner.nextLine().trim();
     }
 
+    private boolean accountMenu() {
+        while (true) {
+            System.out.println("\n=== Account Menu ===");
+            System.out.println("1. Delete Account");
+            System.out.println("2. Continue to Company Setup");
+            System.out.print("Choose option (1-2): ");
+
+            int choice = readInt();
+            switch (choice) {
+                case 1 -> {
+                    System.out.println("Deleting this account will remove all associated data and company associations." +
+                        "\nAre you sure you want to delete your account? (yes/no)");
+                    String confirm = scanner.nextLine().trim().toLowerCase();
+                    if ("yes".equals(confirm)) {
+                        userService.deleteUser(currentUserId);
+                        System.out.println("Account deleted. Exiting...");
+                        currentUserId = null;
+                        currentUser = null;
+                        return false;
+                    }
+                }
+                case 2 -> { return true; }
+                default -> System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+
     private boolean setupCompany() {
         System.out.println("\n--- Company Setup ---");
         System.out.println("1. Create new company");
         System.out.println("2. Select existing company");
-        System.out.print("Choose option (1-2): ");
+        System.out.println("3. Go back to Account settings");
+        System.out.print("Choose option (1-3): ");
 
         int choice = readInt();
 
@@ -192,6 +228,8 @@ public class CliApp {
             return createCompany();
         } else if (choice == 2) {
             return selectCompany();
+        } else if (choice == 3) {
+            return accountMenu();
         } else {
             System.out.println("Invalid choice.");
             return false;

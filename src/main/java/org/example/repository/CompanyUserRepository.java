@@ -27,4 +27,12 @@ public class CompanyUserRepository extends BaseRepository<CompanyUser, CompanyUs
                 .getResultList()
         );
     }
+
+    public int deleteByUserId(UUID userId) {
+        return runInTransaction(em ->
+            em.createQuery("DELETE FROM CompanyUser cu WHERE cu.user.id = :userId")
+                .setParameter("userId", userId)
+                .executeUpdate()
+        );
+    }
 }
