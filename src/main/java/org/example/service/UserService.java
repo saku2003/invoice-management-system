@@ -2,15 +2,18 @@ package org.example.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.PasswordEncoder;
+import org.example.entity.company.CompanyUser;
 import org.example.entity.user.CreateUserDTO;
 import org.example.entity.user.UserDTO;
 import org.example.entity.user.User;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.EntityNotFoundException;
 import org.example.exception.ValidationException;
+import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
 import org.example.util.LogUtil;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -18,9 +21,11 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CompanyUserRepository companyUserRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, CompanyUserRepository companyUserRepository) {
         this.userRepository = userRepository;
+        this.companyUserRepository = companyUserRepository;
     }
 
     public UserDTO register(CreateUserDTO dto) {
@@ -69,7 +74,16 @@ public class UserService {
                 return new EntityNotFoundException("User", userId);
             });
 
+        List<CompanyUser> companyUsers = companyUserRepository.findByUserId(userId);
+
+        log.debug("Found {} company associations for userId={}", companyUsers.size(), userId);
+
+        // delete all company associations before deleting the actual User
+        int deletedCount = companyUserRepository.deleteByUserId(userId);
+        log.debug("Deleted {} company associations for userId={}", deletedCount, userId);
+
         userRepository.delete(user);
-        log.info("User deleted successfully with userId={}", userId);
+        log.info("User deleted successfully with userId={}, removed from {} companies",
+            userId, deletedCount);
     }
 }
