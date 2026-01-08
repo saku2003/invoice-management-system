@@ -39,6 +39,7 @@ public class InvoiceServiceTest {
             companyRepository,
             clientRepository
         );
+
     }
 
     //Success cases
