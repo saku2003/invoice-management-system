@@ -30,7 +30,7 @@ public class Invoice {
     private Company company;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "client_id", nullable = false)
+    @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false)
     private Client client;
 
     @Column (name= "number", nullable = false, unique = true)
@@ -68,12 +68,12 @@ public class Invoice {
     }
 
     public void recalcTotals() {
-        BigDecimal currentVat = (this.vatAmount != null) ? this.vatAmount : BigDecimal.ZERO;
-
         BigDecimal subTotal = invoiceItems.stream()
-            .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+            .map(i -> i.getUnitPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+
+        BigDecimal currentVat = (this.vatAmount != null) ? this.vatAmount : BigDecimal.ZERO;
         this.amount = subTotal.add(currentVat);
     }
 

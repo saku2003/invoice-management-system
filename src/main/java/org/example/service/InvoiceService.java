@@ -41,6 +41,7 @@ public class InvoiceService {
             .orElseThrow(() -> new EntityNotFoundException("Client", dto.clientId()));
 
         Invoice invoice = Invoice.fromDTO(dto, company, client);
+        log.info("Creating invoice for client ID: {}", client.getId());
 
         Invoice saved = invoiceRepository.create(invoice);
         log.info("Successfully created invoice {} (ID: {}) for company {}", saved.getNumber(), saved.getId(), dto.companyId());
