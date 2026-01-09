@@ -68,9 +68,11 @@ public class Invoice {
     }
 
     public void recalcTotals() {
-        amount = invoiceItems.stream()
-            .map(i -> i.getUnitPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+        BigDecimal subTotal = invoiceItems.stream()
+            .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.amount = subTotal.add(this.vatAmount);
     }
 
     public static Invoice fromDTO(CreateInvoiceDTO dto, Company company, Client client) {
@@ -82,12 +84,13 @@ public class Invoice {
             .status(InvoiceStatus.CREATED)
             .invoiceItems(new ArrayList<>())
             .amount(BigDecimal.ZERO)
-            .vatAmount(BigDecimal.ZERO)
+            .vatAmount(dto.vatAmount())
             .build();
 
         if (dto.items() != null) {
             dto.items().forEach(itemDTO -> {
                 InvoiceItem item = new InvoiceItem();
+                item.setName(itemDTO.name());
                 item.setQuantity(itemDTO.quantity());
                 item.setUnitPrice(itemDTO.unitPrice());
                 invoice.addItem(item);

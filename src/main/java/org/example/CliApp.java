@@ -643,6 +643,9 @@ public class CliApp {
             LocalDate dueDate = LocalDate.parse(input);
             LocalDateTime dueDateTime = dueDate.atTime(23, 59);
 
+            System.out.print("Enter VAT amount (e.g. 250.00): ");
+            BigDecimal vatAmount = new BigDecimal(scanner.nextLine().trim());
+
 
             List<InvoiceItemDTO> items = readInvoiceItems();
 
@@ -656,6 +659,7 @@ public class CliApp {
                 selectedClient.id(),
                 invoiceNumber,
                 dueDateTime,
+                vatAmount,
                 items
             );
 
@@ -678,9 +682,10 @@ public class CliApp {
 
         while (true) {
             System.out.print("Add item? (y/n): ");
-            String choice = scanner.nextLine().trim();
+            if (!scanner.nextLine().trim().equalsIgnoreCase("y")) break;
 
-            if (!choice.equalsIgnoreCase("y")) break;
+            System.out.print("Item name (e.g. 'Consulting hours'): ");
+            String name = scanner.nextLine().trim();
 
             System.out.print("Quantity: ");
             int quantity = readInt();
@@ -689,12 +694,11 @@ public class CliApp {
             BigDecimal unitPrice = new BigDecimal(scanner.nextLine().trim());
 
             items.add(InvoiceItemDTO.builder()
+                .name(name)
                 .quantity(quantity)
                 .unitPrice(unitPrice)
-                .build()
-            );
+                .build());
         }
-
         return items;
     }
 

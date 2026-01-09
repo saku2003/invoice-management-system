@@ -24,6 +24,9 @@ public class InvoiceItem {
     @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column (name= "quantity", nullable = false)
     private int quantity;
 

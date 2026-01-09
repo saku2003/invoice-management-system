@@ -8,6 +8,7 @@ import java.util.UUID;
 @Builder
 public record InvoiceItemDTO(
     UUID id,
+    String name,
     int quantity,
     BigDecimal unitPrice
 ) {
