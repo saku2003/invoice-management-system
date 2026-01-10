@@ -595,8 +595,29 @@ public class CliApp {
             List<InvoiceDTO> invoices = invoiceService.getInvoicesByCompany(currentCompanyId);
             if (invoices.isEmpty()) {
                 System.out.println("There are currently no invoices under this company");
+                return;
             }
-            invoices.forEach(System.out::println);
+
+            for (InvoiceDTO invoice : invoices) {
+                System.out.println("Invoice: " + invoice.number());
+                System.out.println("Status : " + invoice.status());
+                System.out.printf("Amount : %.2f%n", invoice.amount());
+                System.out.printf("VAT    : %.2f%n", invoice.vatAmount());
+                System.out.println("Due    : " + invoice.dueDate().toLocalDate());
+
+                System.out.println("Items:");
+                if (invoice.items().isEmpty()) {
+                    System.out.println(" - (no items)");
+                } else {
+                    for (InvoiceItemDTO item : invoice.items()) {
+                        System.out.printf(" - %s: %d x %.2f%n",
+                            item.name().isBlank() ? "(no name)" : item.name(),
+                            item.quantity(),
+                            item.unitPrice());
+                    }
+                }
+                System.out.println("--------------------------------------------------");
+            }
         } catch (EntityNotFoundException e) {
             System.out.println("✗ Failed to list invoices: " + e.getMessage());
         }
@@ -643,8 +664,9 @@ public class CliApp {
             LocalDate dueDate = LocalDate.parse(input);
             LocalDateTime dueDateTime = dueDate.atTime(23, 59);
 
-            System.out.print("Enter VAT amount (e.g. 250.00): ");
-            BigDecimal vatAmount = new BigDecimal(scanner.nextLine().trim());
+            System.out.print("Enter VAT rate (e.g. 0.25, 0.12): ");
+            String vatInput = scanner.nextLine().trim();
+            Float vatRate = vatInput.isEmpty() ? null : Float.parseFloat(vatInput);
 
 
             List<InvoiceItemDTO> items = readInvoiceItems();
@@ -659,7 +681,7 @@ public class CliApp {
                 selectedClient.id(),
                 invoiceNumber,
                 dueDateTime,
-                vatAmount,
+                vatRate,
                 items
             );
 
@@ -750,12 +772,21 @@ public class CliApp {
         InvoiceDTO invoice = selectInvoice();
         if (invoice == null) return;
 
+        System.out.println("--------------------------------------------------");
+        System.out.println("Invoice: " + invoice.number());
+        System.out.println("Status : " + invoice.status());
+        System.out.println("Items:");
         if (invoice.items().isEmpty()) {
-            System.out.println("No items for this invoice.");
-            return;
+            System.out.println(" - (no items)");
+        } else {
+            for (InvoiceItemDTO item : invoice.items()) {
+                System.out.printf(" - %s: %d x %.2f%n",
+                    item.name().isBlank() ? "(no name)" : item.name(),
+                    item.quantity(),
+                    item.unitPrice());
+            }
         }
-
-        invoice.items().forEach(System.out::println);
+        System.out.println("--------------------------------------------------");
     }
 
     private void addInvoiceItem() {
@@ -896,6 +927,7 @@ public class CliApp {
         }
     }
 
+
     private InvoiceDTO selectInvoice() {
         List<InvoiceDTO> invoices = invoiceService.getInvoicesByCompany(currentCompanyId);
 
@@ -906,8 +938,12 @@ public class CliApp {
 
         for (int i = 0; i < invoices.size(); i++) {
             InvoiceDTO inv = invoices.get(i);
-            System.out.println((i + 1) + ". " + inv.number() + " | " + inv.status() + " | " + inv.items().size() + " items");
+            System.out.println("--------------------------------------------------");
+            System.out.println((i + 1) + ". Invoice: " + inv.number());
+            System.out.println("   Status : " + inv.status());
+            System.out.println("   Items  : " + inv.items().size());
         }
+        System.out.println("--------------------------------------------------");
 
         System.out.print("Select invoice number: ");
         int index = readInt() - 1;

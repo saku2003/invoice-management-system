@@ -57,7 +57,7 @@ public class InvoiceService {
 
         if (dto.dueDate() != null) invoice.setDueDate(dto.dueDate());
         if (dto.status() != null) invoice.setStatus(dto.status());
-        if (dto.vatAmount() != null) invoice.setVatAmount(dto.vatAmount());
+        if (dto.vatRate() != null) invoice.setVatRate(dto.vatRate());
 
         if (dto.items() != null) {
             log.debug("Refreshing items for invoice {}. New item count: {}", dto.invoiceId(), dto.items().size());

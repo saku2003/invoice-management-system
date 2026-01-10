@@ -39,6 +39,8 @@ public class Invoice {
     @Column(name= "amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
+    private Float vatRate;
+
     private BigDecimal vatAmount;
 
     @Column(name= "due_date")
@@ -68,13 +70,13 @@ public class Invoice {
     }
 
     public void recalcTotals() {
-        BigDecimal currentVat = (this.vatAmount != null) ? this.vatAmount : BigDecimal.ZERO;
-
         BigDecimal subTotal = invoiceItems.stream()
             .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        this.amount = subTotal.add(currentVat);
+        BigDecimal vat = (vatRate != null ? BigDecimal.valueOf(vatRate) : BigDecimal.ZERO).multiply(subTotal);
+        this.vatAmount = vat;
+        this.amount = subTotal.add(vat);
     }
 
     public static Invoice fromDTO(CreateInvoiceDTO dto, Company company, Client client) {
@@ -86,7 +88,7 @@ public class Invoice {
             .status(InvoiceStatus.CREATED)
             .invoiceItems(new ArrayList<>())
             .amount(BigDecimal.ZERO)
-            .vatAmount(dto.vatAmount())
+            .vatRate(dto.vatRate())
             .build();
 
         if (dto.items() != null) {
