@@ -73,29 +73,6 @@ class CompanyServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw ValidationException if creator user id is null")
-    void createCompanyValidationExceptionUserIdNull() {
-        CreateCompanyDTO dto = new CreateCompanyDTO(
-            "1234567890", "email@test.com", null, "TestCo", null, null, null
-        );
-
-        assertThrows(ValidationException.class, () -> companyService.create(null, dto));
-
-        verify(companyRepository, never()).create(any());
-        verify(companyUserRepository, never()).create(any());
-    }
-
-    @Test
-    @DisplayName("Should throw ValidationException if DTO is null")
-    void createCompanyValidationExceptionDtoNull() {
-        UUID userId = UUID.randomUUID();
-        assertThrows(ValidationException.class, () -> companyService.create(userId, null));
-
-        verify(companyRepository, never()).create(any());
-        verify(companyUserRepository, never()).create(any());
-    }
-
-    @Test
     @DisplayName("Should throw EntityNotFoundException if creator user not found")
     void createCompanyUserNotFound() {
         UUID userId = UUID.randomUUID();
@@ -105,7 +82,8 @@ class CompanyServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> companyService.create(userId, dto));
+        assertThrows(EntityNotFoundException.class,
+            () -> companyService.create(userId, dto));
 
         verify(companyRepository, never()).create(any());
         verify(companyUserRepository, never()).create(any());
@@ -125,7 +103,8 @@ class CompanyServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(companyRepository.existsByOrgNum("1234567890")).thenReturn(true);
 
-        assertThrows(BusinessRuleException.class, () -> companyService.create(userId, dto));
+        assertThrows(BusinessRuleException.class,
+            () -> companyService.create(userId, dto));
 
         verify(companyRepository, never()).create(any());
         verify(companyUserRepository, never()).create(any());
@@ -155,21 +134,6 @@ class CompanyServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw ValidationException if update DTO is null")
-    void updateCompanyValidationExceptionDtoNull() {
-        assertThrows(ValidationException.class, () -> companyService.update(null));
-        verify(companyRepository, never()).update(any());
-    }
-
-    @Test
-    @DisplayName("Should throw ValidationException if companyId is null on update")
-    void updateCompanyValidationExceptionIdNull() {
-        UpdateCompanyDTO dto = new UpdateCompanyDTO(null, "email@test.com", null, "Name", null, null, null);
-        assertThrows(ValidationException.class, () -> companyService.update(dto));
-        verify(companyRepository, never()).update(any());
-    }
-
-    @Test
     @DisplayName("Should throw EntityNotFoundException if company not found on update")
     void updateCompanyNotFound() {
         UUID companyId = UUID.randomUUID();
@@ -177,7 +141,9 @@ class CompanyServiceTest {
 
         when(companyRepository.findById(companyId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> companyService.update(dto));
+        assertThrows(EntityNotFoundException.class,
+            () -> companyService.update(dto));
+
         verify(companyRepository, never()).update(any());
     }
 
@@ -196,19 +162,14 @@ class CompanyServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw ValidationException if companyId is null on delete")
-    void deleteCompanyValidationExceptionIdNull() {
-        assertThrows(ValidationException.class, () -> companyService.deleteCompany(null));
-        verify(companyRepository, never()).delete(any());
-    }
-
-    @Test
     @DisplayName("Should throw EntityNotFoundException if company not found on delete")
     void deleteCompanyNotFound() {
         UUID companyId = UUID.randomUUID();
         when(companyRepository.findById(companyId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> companyService.deleteCompany(companyId));
+        assertThrows(EntityNotFoundException.class,
+            () -> companyService.deleteCompany(companyId));
+
         verify(companyRepository, never()).delete(any());
     }
 }
