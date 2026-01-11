@@ -8,7 +8,7 @@ import java.util.UUID;
 public record UpdateInvoiceDTO(
     UUID invoiceId,
     LocalDateTime dueDate,
-    BigDecimal vatAmount,
+    BigDecimal vatRate,
     List<InvoiceItemDTO> items,
     InvoiceStatus status
 ) {}

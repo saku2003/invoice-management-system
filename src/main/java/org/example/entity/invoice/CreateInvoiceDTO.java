@@ -10,6 +10,6 @@ public record CreateInvoiceDTO(
     UUID clientId,
     String number,
     LocalDateTime dueDate,
-    BigDecimal vatAmount,
+    BigDecimal vatRate,
     List<InvoiceItemDTO> items
 ) {}

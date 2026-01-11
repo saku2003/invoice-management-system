@@ -30,7 +30,7 @@ public class Invoice {
     private Company company;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     @Column (name= "number", nullable = false, unique = true)
@@ -38,6 +38,8 @@ public class Invoice {
 
     @Column(name= "amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
+
+    private BigDecimal vatRate;
 
     private BigDecimal vatAmount;
 
@@ -69,12 +71,13 @@ public class Invoice {
 
     public void recalcTotals() {
         BigDecimal subTotal = invoiceItems.stream()
-            .map(i -> i.getUnitPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+            .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-
-        BigDecimal currentVat = (this.vatAmount != null) ? this.vatAmount : BigDecimal.ZERO;
-        this.amount = subTotal.add(currentVat);
+        BigDecimal vat = (vatRate != null ? vatRate : BigDecimal.ZERO)
+            .multiply(subTotal);
+        this.vatAmount = vat;
+        this.amount = subTotal.add(vat);
     }
 
     public static Invoice fromDTO(CreateInvoiceDTO dto, Company company, Client client) {
@@ -86,7 +89,7 @@ public class Invoice {
             .status(InvoiceStatus.CREATED)
             .invoiceItems(new ArrayList<>())
             .amount(BigDecimal.ZERO)
-            .vatAmount(dto.vatAmount())
+            .vatRate(dto.vatRate())
             .build();
 
         if (dto.items() != null) {
