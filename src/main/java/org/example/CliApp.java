@@ -612,7 +612,7 @@ public class CliApp {
                 } else {
                     for (InvoiceItemDTO item : invoice.items()) {
                         System.out.printf(" - %s: %d x %.2f%n",
-                            item.name().isBlank() ? "(no name)" : item.name(),
+                            item.name() == null || item.name().isBlank() ? "(no name)" : item.name(),
                             item.quantity(),
                             item.unitPrice());
                     }
@@ -689,6 +689,8 @@ public class CliApp {
 
             System.out.println("✓ Invoice created");
 
+        }catch (IllegalArgumentException e) {
+            System.out.println("✗ Input error: " + e.getMessage());
         }
         catch (DateTimeParseException e) {
             System.out.println("✗ Invalid date format. Please use yyyy-MM-dd.");
@@ -701,9 +703,6 @@ public class CliApp {
         }
         catch (ValidationException e) {
             System.out.println("✗ Validation error: " + e.getMessage());
-        }
-        catch (NumberFormatException e) {
-            System.out.println("✗ Invalid VAT rate format. Please use decimal format (e.g., 0.25).");
         }
     }
 

@@ -39,6 +39,7 @@ public class Invoice {
     @Column(name= "amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
+    @Column(name = "vat_rate", precision = 5, scale = 4)
     private BigDecimal vatRate;
 
     private BigDecimal vatAmount;
@@ -81,6 +82,11 @@ public class Invoice {
     }
 
     public static Invoice fromDTO(CreateInvoiceDTO dto, Company company, Client client) {
+        if (dto.vatRate() != null) {
+            if (dto.vatRate().compareTo(BigDecimal.ZERO) < 0 || dto.vatRate().compareTo(BigDecimal.ONE) > 0) {
+                throw new IllegalArgumentException("VAT rate must be between 0.0 and 1.0 (e.g., 0.25 for 25%)");
+            }
+        }
         Invoice invoice = Invoice.builder()
             .company(company)
             .client(client)
