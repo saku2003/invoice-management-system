@@ -227,23 +227,37 @@ public class CliApp {
 
 
     private boolean setupCompany() {
-        System.out.println("\n--- Company Setup ---");
-        System.out.println("1. Create new company");
-        System.out.println("2. Select existing company");
-        System.out.println("3. Go back to Account settings");
-        System.out.print("Choose option (1-3): ");
+        while (true) {
+            System.out.println("\n--- Company Setup ---");
+            System.out.println("1. Create new company");
+            System.out.println("2. Select existing company");
+            System.out.println("3. Go back to Account settings");
+            System.out.print("Choose option (1-3): ");
 
-        int choice = readInt();
+            int choice = readInt();
 
-        if (choice == 1) {
-            return createCompany();
-        } else if (choice == 2) {
-            return selectCompany();
-        } else if (choice == 3) {
-            return accountMenu();
-        } else {
-            System.out.println("Invalid choice.");
-            return false;
+            if (choice == 1) {
+                if (createCompany()) {
+                    return true; // Company created successfully
+                }
+                // Continue loop to retry
+            } else if (choice == 2) {
+                if (selectCompany()) {
+                    return true; // Company selected successfully
+                }
+                // Continue loop to retry
+            } else if (choice == 3) {
+                if (accountMenu()) {
+                    // User chose "Continue to Company Setup" again
+                    // Continue loop to retry company setup
+                    continue;
+                } else {
+                    // User deleted account
+                    return false;
+                }
+            } else {
+                System.out.println("Invalid choice.");
+            }
         }
     }
 
@@ -307,8 +321,7 @@ public class CliApp {
     private boolean selectCompany() {
         try {
             // Get all companies the user is associated with
-            List<CompanyUser> userCompanies =
-                companyUserService.getUserCompanies(currentUserId);
+            List<CompanyUser> userCompanies = companyUserService.getUserCompanies(currentUserId);
 
             if (userCompanies.isEmpty()) {
                 System.out.println("✗ You are not associated with any companies.");
@@ -316,33 +329,46 @@ public class CliApp {
                 return false;
             }
 
-            System.out.println("\n--- Your Companies ---");
-            for (int i = 0; i < userCompanies.size(); i++) {
-                CompanyUser cu = userCompanies.get(i);
-                Company company = cu.getCompany();
-                System.out.println((i + 1) + ". " + company.getName() + " (" + company.getOrgNum() + ")");
+            while (true) { // <-- add retry loop
+                System.out.println("\n--- Your Companies ---");
+                for (int i = 0; i < userCompanies.size(); i++) {
+                    CompanyUser cu = userCompanies.get(i);
+                    Company company = cu.getCompany();
+                    System.out.println((i + 1) + ". " + company.getName() + " (" + company.getOrgNum() + ")");
+                }
+
+                System.out.print("\nSelect company (1-" + userCompanies.size() + ") or 'cancel' to go back: ");
+                String input = scanner.nextLine().trim();
+
+                if (input.equalsIgnoreCase("cancel")) {
+                    return false;
+                }
+
+                int choice;
+                try {
+                    choice = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("✗ Invalid input: please enter a number.");
+                    continue; // retry
+                }
+
+                if (choice < 1 || choice > userCompanies.size()) {
+                    System.out.println("✗ Invalid selection: number out of range.");
+                    continue; // retry
+                }
+
+                Company selectedCompany = userCompanies.get(choice - 1).getCompany();
+                currentCompany = CompanyDTO.fromEntity(selectedCompany);
+                currentCompanyId = currentCompany.id();
+
+                System.out.println("✓ Company selected: " +
+                    currentCompany.name() + " (" + currentCompany.orgNum() + ")");
+                return true;
             }
-
-            System.out.print("\nSelect company (1-" + userCompanies.size() + "): ");
-            int choice = readInt();
-
-            if (choice < 1 || choice > userCompanies.size()) {
-                System.out.println("✗ Invalid selection.");
-                return false;
-            }
-
-            Company selectedCompany = userCompanies.get(choice - 1).getCompany();
-            currentCompany = CompanyDTO.fromEntity(selectedCompany);
-            currentCompanyId = currentCompany.id();
-
-            System.out.println("✓ Company selected: " +
-                currentCompany.name() + " (" + currentCompany.orgNum() + ")");
-            return true;
 
         } catch (ValidationException e) {
             System.out.println("✗ Invalid request: " + e.getMessage());
             return false;
-
         } catch (EntityNotFoundException e) {
             System.out.println("✗ Company not found.");
             return false;
@@ -350,8 +376,19 @@ public class CliApp {
     }
 
 
+
     private void mainMenu() {
         while (true) {
+            // Safety check: ensure company is selected
+            if (currentCompany == null || currentCompanyId == null) {
+                System.out.println("\n✗ No company selected. Please select or create a company first.");
+                if (!setupCompany()) {
+                    System.out.println("Exiting...");
+                    return;
+                }
+                continue;
+            }
+
             System.out.println("\n=== Main Menu ===");
             System.out.println("Current Company: " + currentCompany.name() + " (" + currentCompany.orgNum() + ")");
             System.out.println("1. Client Management");
@@ -409,18 +446,22 @@ public class CliApp {
     }
 
     private void listClients() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         try {
             List<ClientDTO> clients = clientService.getClientsByCompany(currentCompanyId);
             if (clients.isEmpty()) {
                 System.out.println("No clients found.");
             } else {
                 System.out.println("\nClients:");
-                for (ClientDTO client : clients) {
-                    System.out.println("  ID: " + client.id());
-                    System.out.println("  Name: " + client.firstName() + " " + client.lastName());
-                    System.out.println("  Email: " + client.email());
-                    System.out.println("  City: " + client.city());
-                    System.out.println("  ---");
+                for (int i = 0; i < clients.size(); i++) {
+                    ClientDTO client = clients.get(i);
+                    System.out.println((i + 1) + ". " + client.firstName() + " " + client.lastName());
+                    System.out.println("   Email: " + client.email());
+                    System.out.println("   City: " + client.city());
+                    System.out.println("   ---");
                 }
             }
         } catch (EntityNotFoundException e) {
@@ -429,6 +470,10 @@ public class CliApp {
     }
 
     private void createClient() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         System.out.println("\n--- Create Client ---");
 
         System.out.print("First Name: ");
@@ -467,7 +512,6 @@ public class CliApp {
             ClientDTO client = clientService.createClient(dto);
 
             System.out.println("✓ Client created successfully!");
-            System.out.println("  ID: " + client.id());
             System.out.println("  Name: " + client.firstName() + " " + client.lastName());
 
         } catch (EntityNotFoundException e) {
@@ -479,52 +523,39 @@ public class CliApp {
 
 
     private void updateClient() {
-        System.out.print("\nEnter Client ID: ");
-        String clientIdStr = scanner.nextLine().trim();
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
+        ClientDTO client = selectClient();
+        if (client == null) return;
 
         try {
-            UUID clientId = UUID.fromString(clientIdStr);
-
-            // Verify client exists
-            var clientOpt = clientService.findById(clientId);
-            if (clientOpt.isEmpty()) {
-                System.out.println("✗ Client not found.");
-                return;
-            }
-
-            var client = clientOpt.get();
-
-            // Verify client belongs to current company
-            if (!client.getCompany().getId().equals(currentCompanyId)) {
-                System.out.println("✗ Client does not belong to current company.");
-                return;
-            }
-
             System.out.println("Leave blank to keep current value.");
 
-            System.out.print("First Name [" + (client.getFirstName() != null ? client.getFirstName() : "") + "]: ");
+            System.out.print("First Name [" + (client.firstName() != null ? client.firstName() : "") + "]: ");
             String firstName = scanner.nextLine().trim();
 
-            System.out.print("Last Name [" + (client.getLastName() != null ? client.getLastName() : "") + "]: ");
+            System.out.print("Last Name [" + (client.lastName() != null ? client.lastName() : "") + "]: ");
             String lastName = scanner.nextLine().trim();
 
-            System.out.print("Email [" + (client.getEmail() != null ? client.getEmail() : "") + "]: ");
+            System.out.print("Email [" + (client.email() != null ? client.email() : "") + "]: ");
             String email = scanner.nextLine().trim();
 
-            System.out.print("Address [" + (client.getAddress() != null ? client.getAddress() : "") + "]: ");
+            System.out.print("Address [" + (client.address() != null ? client.address() : "") + "]: ");
             String address = scanner.nextLine().trim();
 
-            System.out.print("City [" + (client.getCity() != null ? client.getCity() : "") + "]: ");
+            System.out.print("City [" + (client.city() != null ? client.city() : "") + "]: ");
             String city = scanner.nextLine().trim();
 
-            System.out.print("Country [" + (client.getCountry() != null ? client.getCountry() : "") + "]: ");
+            System.out.print("Country [" + (client.country() != null ? client.country() : "") + "]: ");
             String country = scanner.nextLine().trim();
 
-            System.out.print("Phone Number [" + (client.getPhoneNumber() != null ? client.getPhoneNumber() : "") + "]: ");
+            System.out.print("Phone Number [" + (client.phoneNumber() != null ? client.phoneNumber() : "") + "]: ");
             String phoneNumber = scanner.nextLine().trim();
 
             UpdateClientDTO updateDto = new UpdateClientDTO(
-                clientId,
+                client.id(),
                 firstName.isEmpty() ? null : firstName,
                 lastName.isEmpty() ? null : lastName,
                 email.isEmpty() ? null : email,
@@ -538,52 +569,42 @@ public class CliApp {
 
             System.out.println("✓ Client updated successfully!");
             System.out.println("  Name: " + updated.firstName() + " " + updated.lastName());
-        } catch (IllegalArgumentException e) {
-            System.out.println("✗ Invalid ID format. Please enter a valid UUID.");
         } catch (EntityNotFoundException e) {
             System.out.println("✗ Client update failed: " + e.getMessage());
+        } catch (ValidationException e) {
+            System.out.println("✗ Input Error: " + e.getMessage());
         }
     }
 
 
     private void deleteClient() {
-        System.out.print("\nEnter Client ID to delete: ");
-        String clientIdStr = scanner.nextLine().trim();
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
+        ClientDTO client = selectClient();
+        if (client == null) return;
 
-        try {
-            UUID clientId = UUID.fromString(clientIdStr);
+        System.out.print("Are you sure you want to delete " + client.firstName() + " " + client.lastName() + "? (yes/no): ");
+        String confirm = scanner.nextLine().trim().toLowerCase();
 
-            // Verify client belongs to current company
-            var clientOpt = clientRepository.findById(clientId);
-            if (clientOpt.isEmpty()) {
-                System.out.println("✗ Client not found.");
-                return;
-            }
-
-            var client = clientOpt.get();
-            if (!client.getCompany().getId().equals(currentCompanyId)) {
-                System.out.println("✗ Client does not belong to current company.");
-                return;
-            }
-
-            System.out.print("Are you sure you want to delete this client? (yes/no): ");
-            String confirm = scanner.nextLine().trim().toLowerCase();
-
-            if ("yes".equals(confirm)) {
-                clientService.deleteClient(clientId);
+        if ("yes".equals(confirm)) {
+            try {
+                clientService.deleteClient(client.id());
                 System.out.println("✓ Client deleted successfully!");
-            } else {
-                System.out.println("Deletion cancelled.");
+            } catch (EntityNotFoundException e) {
+                System.out.println("✗ Client deletion failed: " + e.getMessage());
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("✗ Invalid ID format. Please enter a valid UUID.");
-
-        } catch (EntityNotFoundException e) {
-            System.out.println("✗ Client deletion failed: " + e.getMessage());
+        } else {
+            System.out.println("Deletion cancelled.");
         }
     }
 
     private void invoiceMenu() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         while (true) {
             System.out.println("\n--- Invoice Management ---");
             System.out.println("1. List Invoices");
@@ -609,6 +630,10 @@ public class CliApp {
     }
 
     private void listInvoices() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         try {
             List<InvoiceDTO> invoices = invoiceService.getInvoicesByCompany(currentCompanyId);
             if (invoices.isEmpty()) {
@@ -621,6 +646,10 @@ public class CliApp {
     }
 
     private void createInvoice() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         try {
             System.out.println("\n--- Create Invoice ---");
 
@@ -634,12 +663,10 @@ public class CliApp {
 
             for (int i = 0; i < clients.size(); i++) {
                 ClientDTO client = clients.get(i);
-                System.out.println((i + 1) + ".");
-                System.out.println("  ID: " + client.id());
-                System.out.println("  Name: " + client.firstName() + " " + client.lastName());
-                System.out.println("  Email: " + client.email());
-                System.out.println("  City: " + client.city());
-                System.out.println("  ---");
+                System.out.println((i + 1) + ". " + client.firstName() + " " + client.lastName());
+                System.out.println("   Email: " + client.email());
+                System.out.println("   City: " + client.city());
+                System.out.println("   ---");
             }
 
             System.out.print("Select client number: ");
@@ -906,7 +933,48 @@ public class CliApp {
         }
     }
 
+    private ClientDTO selectClient() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return null;
+        }
+        try {
+            List<ClientDTO> clients = clientService.getClientsByCompany(currentCompanyId);
+
+            if (clients.isEmpty()) {
+                System.out.println("No clients found for this company.");
+                return null;
+            }
+
+            System.out.println("\n--- Select Client ---");
+            for (int i = 0; i < clients.size(); i++) {
+                ClientDTO client = clients.get(i);
+                System.out.println((i + 1) + ". " + client.firstName() + " " + client.lastName());
+                System.out.println("   Email: " + client.email());
+                System.out.println("   City: " + client.city());
+                System.out.println("   ---");
+            }
+
+            System.out.print("Select client number: ");
+            int index = readInt() - 1;
+
+            if (index < 0 || index >= clients.size()) {
+                System.out.println("✗ Invalid selection");
+                return null;
+            }
+
+            return clients.get(index);
+        } catch (EntityNotFoundException e) {
+            System.out.println("✗ Failed to list clients: " + e.getMessage());
+            return null;
+        }
+    }
+
     private InvoiceDTO selectInvoice() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return null;
+        }
         List<InvoiceDTO> invoices = invoiceService.getInvoicesByCompany(currentCompanyId);
 
         if (invoices.isEmpty()) {
@@ -931,6 +999,10 @@ public class CliApp {
     }
 
     private void companyUserMenu() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         while (true) {
             System.out.println("\n--- Company Users ---");
             System.out.println("1. List Company Users");
@@ -958,11 +1030,11 @@ public class CliApp {
                 System.out.println("No users associated with this company.");
             } else {
                 System.out.println("\nCompany Users:");
-                for (CompanyUser cu : companyUsers) {
-                    System.out.println("  User ID: " + cu.getUser().getId());
-                    System.out.println("  Name: " + cu.getUser().getFirstName() + " " + cu.getUser().getLastName());
-                    System.out.println("  Email: " + cu.getUser().getEmail());
-                    System.out.println("  ---");
+                for (int i = 0; i < companyUsers.size(); i++) {
+                    CompanyUser cu = companyUsers.get(i);
+                    System.out.println((i + 1) + ". " + cu.getUser().getFirstName() + " " + cu.getUser().getLastName());
+                    System.out.println("   Email: " + cu.getUser().getEmail());
+                    System.out.println("   ---");
                 }
             }
         } catch (ValidationException e) {
@@ -1033,6 +1105,10 @@ public class CliApp {
 
 
     private void companySettingsMenu() {
+        if (currentCompany == null || currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         while (true) {
             System.out.println("\n--- Company Settings ---");
             System.out.println("Company: " + currentCompany.name());
@@ -1055,6 +1131,10 @@ public class CliApp {
     }
 
     private void updateCompany() {
+        if (currentCompany == null || currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         System.out.println("\n--- Update Company ---");
         System.out.println("Leave blank to keep current value.");
         System.out.print("Name [" + currentCompany.name() + "]: ");
@@ -1095,8 +1175,11 @@ public class CliApp {
     }
 
     private void viewCompanyDetails() {
+        if (currentCompany == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         System.out.println("\n--- Company Details ---");
-        System.out.println("ID: " + currentCompany.id());
         System.out.println("Name: " + currentCompany.name());
         System.out.println("Org Num: " + currentCompany.orgNum());
         System.out.println("Email: " + currentCompany.email());
