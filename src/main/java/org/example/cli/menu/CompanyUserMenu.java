@@ -1,6 +1,7 @@
 package org.example.cli.menu;
 
 import org.example.cli.CliContext;
+import org.example.cli.DisplayFormatter;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 import org.example.entity.company.CompanyUser;
@@ -57,15 +58,9 @@ public class CompanyUserMenu {
 
             if (companyUsers.isEmpty()) {
                 System.out.println("No users associated with this company.");
-            } else {
-                System.out.println("\nCompany Users:");
-                for (int i = 0; i < companyUsers.size(); i++) {
-                    CompanyUser cu = companyUsers.get(i);
-                    System.out.println((i + 1) + ". " + cu.getUser().getFirstName() + " " + cu.getUser().getLastName());
-                    System.out.println("   Email: " + cu.getUser().getEmail());
-                    System.out.println("   ---");
-                }
+                return;
             }
+            DisplayFormatter.printCompanyUserList(companyUsers);
         } catch (ValidationException e) {
             System.out.println("✗ Invalid request: " + e.getMessage());
         } catch (EntityNotFoundException e) {
@@ -98,14 +93,9 @@ public class CompanyUserMenu {
                 return;
             }
 
-            System.out.println("\n--- Company Users ---");
-            for (int i = 0; i < companyUsers.size(); i++) {
-                CompanyUser cu = companyUsers.get(i);
-                System.out.println((i + 1) + ". " + cu.getUser().getFirstName() + " " +
-                    cu.getUser().getLastName() + " (" + cu.getUser().getEmail() + ")");
-            }
+            DisplayFormatter.printCompanyUserSelectionList(companyUsers);
 
-            System.out.print("\nSelect user to remove (1-" + companyUsers.size() + "): ");
+            System.out.print("Select user to remove (1-" + companyUsers.size() + "): ");
             int choice = input.readInt();
 
             if (choice < 1 || choice > companyUsers.size()) {

@@ -1,6 +1,7 @@
 package org.example.cli.menu;
 
 import org.example.cli.CliContext;
+import org.example.cli.DisplayFormatter;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 import org.example.entity.client.ClientDTO;
@@ -59,16 +60,9 @@ public class ClientMenu {
 
             if (clients.isEmpty()) {
                 System.out.println("No clients found.");
-            } else {
-                System.out.println("\nClients:");
-                for (int i = 0; i < clients.size(); i++) {
-                    ClientDTO client = clients.get(i);
-                    System.out.println((i + 1) + ". " + client.firstName() + " " + client.lastName());
-                    System.out.println("   Email: " + client.email());
-                    System.out.println("   City: " + client.city());
-                    System.out.println("   ---");
-                }
+                return;
             }
+            DisplayFormatter.printClientList(clients);
         } catch (EntityNotFoundException e) {
             System.out.println("✗ Failed to list clients: " + e.getMessage());
         }
@@ -187,16 +181,9 @@ public class ClientMenu {
                 return null;
             }
 
-            System.out.println("\n--- Select Client ---");
-            for (int i = 0; i < clients.size(); i++) {
-                ClientDTO client = clients.get(i);
-                System.out.println((i + 1) + ". " + client.firstName() + " " + client.lastName());
-                System.out.println("   Email: " + client.email());
-                System.out.println("   City: " + client.city());
-                System.out.println("   ---");
-            }
+            DisplayFormatter.printClientSelectionList(clients);
 
-            System.out.print("Select client number: ");
+            System.out.print("Select client (1-" + clients.size() + "): ");
             int index = input.readInt() - 1;
 
             if (index < 0 || index >= clients.size()) {

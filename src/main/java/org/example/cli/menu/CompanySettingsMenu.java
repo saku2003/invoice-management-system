@@ -1,6 +1,7 @@
 package org.example.cli.menu;
 
 import org.example.cli.CliContext;
+import org.example.cli.DisplayFormatter;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 import org.example.entity.company.CompanyDTO;
@@ -89,18 +90,7 @@ public class CompanySettingsMenu {
             System.out.println("✗ No company selected.");
             return;
         }
-        CompanyDTO company = context.getCurrentCompany();
-
-        System.out.println("\n--- Company Details ---");
-        System.out.println("Name: " + company.name());
-        System.out.println("Org Num: " + company.orgNum());
-        System.out.println("Email: " + company.email());
-        System.out.println("Phone: " + company.phoneNumber());
-        System.out.println("Address: " + company.address());
-        System.out.println("City: " + company.city());
-        System.out.println("Country: " + company.country());
-        System.out.println("Created: " + company.createdAt());
-        System.out.println("Updated: " + company.updatedAt());
+        DisplayFormatter.printCompanyDetails(context.getCurrentCompany());
     }
 }
 

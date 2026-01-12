@@ -1,6 +1,7 @@
 package org.example.cli.menu;
 
 import org.example.cli.CliContext;
+import org.example.cli.DisplayFormatter;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 import org.example.entity.client.ClientDTO;
@@ -71,9 +72,10 @@ public class InvoiceMenu {
                 .getInvoicesByCompany(context.getCurrentCompanyId());
 
             if (invoices.isEmpty()) {
-                System.out.println("There are currently no invoices under this company");
+                System.out.println("There are currently no invoices under this company.");
+                return;
             }
-            invoices.forEach(System.out::println);
+            DisplayFormatter.printInvoiceList(invoices);
         } catch (EntityNotFoundException e) {
             System.out.println("✗ Failed to list invoices: " + e.getMessage());
         }
@@ -211,12 +213,9 @@ public class InvoiceMenu {
             return null;
         }
 
-        for (int i = 0; i < invoices.size(); i++) {
-            InvoiceDTO inv = invoices.get(i);
-            System.out.println((i + 1) + ". " + inv.number() + " | " + inv.status() + " | " + inv.items().size() + " items");
-        }
+        DisplayFormatter.printInvoiceSelectionList(invoices);
 
-        System.out.print("Select invoice number: ");
+        System.out.print("Select invoice (1-" + invoices.size() + "): ");
         int index = input.readInt() - 1;
 
         if (index < 0 || index >= invoices.size()) {
