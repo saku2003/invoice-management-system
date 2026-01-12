@@ -44,9 +44,10 @@ A CLI-based Invoice Management System for small businesses. Supports user authen
 ## Architecture
 
 **Domain Model:**
+```
 User ↔ CompanyUser ↔ Company ↔ Client
 ↳ Invoice ↔ InvoiceItem
-
+```
 
 **Entities:**
 - **User:** System credentials
@@ -56,7 +57,8 @@ User ↔ CompanyUser ↔ Company ↔ Client
 - **Invoice:** Financial document
 - **InvoiceItem:** Line items
 
-**Design Patterns:** Repository, Service layer, DTO, Constructor DI
+**Design Patterns:**
+Repository, DTO, Dependency Injection, Builder
 
 ---
 
