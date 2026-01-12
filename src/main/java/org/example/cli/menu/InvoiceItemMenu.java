@@ -64,7 +64,14 @@ public class InvoiceItemMenu {
             return;
         }
 
-        invoice.items().forEach(System.out::println);
+        System.out.println("\nInvoice Items:");
+        for (int i = 0; i < invoice.items().size(); i++) {
+            InvoiceItemDTO item = invoice.items().get(i);
+            System.out.println((i + 1) + ". " + item.name());
+            System.out.println("   Quantity: " + item.quantity());
+            System.out.println("   Unit Price: " + item.unitPrice());
+            System.out.println("   ---");
+        }
     }
 
     private void addInvoiceItem() {
@@ -72,6 +79,8 @@ public class InvoiceItemMenu {
         if (invoice == null) return;
 
         try {
+            String name = input.readLine("Item name: ");
+
             System.out.print("Quantity: ");
             int quantity = input.readInt();
 
@@ -80,13 +89,14 @@ public class InvoiceItemMenu {
 
             List<InvoiceItemDTO> updated = new ArrayList<>(invoice.items());
             updated.add(InvoiceItemDTO.builder()
+                .name(name)
                 .quantity(quantity)
                 .unitPrice(unitPrice)
                 .build()
             );
 
             services.getInvoiceService().updateInvoice(
-                new UpdateInvoiceDTO(invoice.id(), null, updated, null)
+                new UpdateInvoiceDTO(invoice.id(), null, null, updated, null)
             );
             System.out.println("✓ Invoice item added");
         } catch (NumberFormatException e) {
@@ -107,7 +117,8 @@ public class InvoiceItemMenu {
         }
 
         for (int i = 0; i < items.size(); i++) {
-            System.out.println((i + 1) + ". " + items.get(i));
+            InvoiceItemDTO it = items.get(i);
+            System.out.println((i + 1) + ". " + it.name() + " | Qty: " + it.quantity() + " | Price: " + it.unitPrice());
         }
 
         System.out.print("Select item to update: ");
@@ -120,25 +131,32 @@ public class InvoiceItemMenu {
         InvoiceItemDTO item = items.get(index);
 
         try {
-            System.out.print("New Quantity: ");
-            int quantity = input.readInt();
+            System.out.println("Leave blank to keep current value.");
 
-            System.out.print("New Unit Price: ");
-            BigDecimal unitPrice = new BigDecimal(input.readLine());
+            String nameInput = input.readLine("Item name [" + item.name() + "]: ");
+            String name = nameInput.isEmpty() ? item.name() : nameInput;
+
+            System.out.print("Quantity [" + item.quantity() + "]: ");
+            String qtyInput = input.readLine();
+            int quantity = qtyInput.isEmpty() ? item.quantity() : Integer.parseInt(qtyInput);
+
+            System.out.print("Unit Price [" + item.unitPrice() + "]: ");
+            String priceInput = input.readLine();
+            BigDecimal unitPrice = priceInput.isEmpty() ? item.unitPrice() : new BigDecimal(priceInput);
 
             List<InvoiceItemDTO> updated = items.stream()
                 .map(i -> i.id().equals(item.id())
-                    ? InvoiceItemDTO.builder().id(i.id()).quantity(quantity).unitPrice(unitPrice).build()
+                    ? InvoiceItemDTO.builder().id(i.id()).name(name).quantity(quantity).unitPrice(unitPrice).build()
                     : i)
                 .toList();
 
             services.getInvoiceService().updateInvoice(
-                new UpdateInvoiceDTO(invoice.id(), null, updated, null)
+                new UpdateInvoiceDTO(invoice.id(), null, null, updated, null)
             );
             System.out.println("✓ Invoice item updated");
 
         } catch (NumberFormatException e) {
-            System.out.println("✗ Invalid price format. Please use numbers.");
+            System.out.println("✗ Invalid format. Please use numbers.");
         } catch (EntityNotFoundException e) {
             System.out.println("✗ Update failed: " + e.getMessage());
         } catch (ValidationException e) {
@@ -157,7 +175,8 @@ public class InvoiceItemMenu {
         }
 
         for (int i = 0; i < items.size(); i++) {
-            System.out.println((i + 1) + ". " + items.get(i));
+            InvoiceItemDTO it = items.get(i);
+            System.out.println((i + 1) + ". " + it.name() + " | Qty: " + it.quantity() + " | Price: " + it.unitPrice());
         }
 
         System.out.print("Select item to remove: ");
@@ -175,7 +194,7 @@ public class InvoiceItemMenu {
                 .toList();
 
             services.getInvoiceService().updateInvoice(
-                new UpdateInvoiceDTO(invoice.id(), null, updated, null)
+                new UpdateInvoiceDTO(invoice.id(), null, null, updated, null)
             );
             System.out.println("✓ Invoice item removed");
 
@@ -199,6 +218,8 @@ public class InvoiceItemMenu {
 
             if (!choice.equalsIgnoreCase("y")) break;
 
+            String name = input.readLine("Item name: ");
+
             System.out.print("Quantity: ");
             int quantity = input.readInt();
 
@@ -206,6 +227,7 @@ public class InvoiceItemMenu {
             BigDecimal unitPrice = new BigDecimal(input.readLine());
 
             items.add(InvoiceItemDTO.builder()
+                .name(name)
                 .quantity(quantity)
                 .unitPrice(unitPrice)
                 .build()

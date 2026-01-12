@@ -9,6 +9,7 @@ import org.example.exception.BusinessRuleException;
 import org.example.exception.EntityNotFoundException;
 import org.example.exception.ValidationException;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -119,6 +120,12 @@ public class InvoiceMenu {
             LocalDate dueDate = LocalDate.parse(dueDateStr);
             LocalDateTime dueDateTime = dueDate.atTime(23, 59);
 
+            String vatRateStr = input.readLine("VAT Rate (e.g., 0.25 for 25%, press Enter for no VAT): ");
+            BigDecimal vatRate = null;
+            if (!vatRateStr.isEmpty()) {
+                vatRate = new BigDecimal(vatRateStr);
+            }
+
             List<InvoiceItemDTO> items = invoiceItemMenu.readInvoiceItems();
 
             if (items.isEmpty()) {
@@ -131,6 +138,7 @@ public class InvoiceMenu {
                 selectedClient.id(),
                 invoiceNumber,
                 dueDateTime,
+                vatRate,
                 items
             );
 
