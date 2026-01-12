@@ -1,11 +1,12 @@
 package org.example.cli.menu;
 
 import org.example.cli.CliContext;
+import org.example.cli.DisplayFormatter;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 
 /**
- * Handles account-related operations like deletion.
+ * Handles account-related operations like viewing profile and deletion.
  */
 public class AccountMenu {
     private final CliContext context;
@@ -24,20 +25,21 @@ public class AccountMenu {
      */
     public boolean show() {
         while (true) {
-            System.out.println("\n=== Account Menu ===");
-            System.out.println("1. Delete Account");
-            System.out.println("2. Continue to Company Setup");
+            DisplayFormatter.printWelcome(context.getCurrentUser());
+            
+            System.out.println("1. Continue to Company Setup");
+            System.out.println("2. Delete Account");
             System.out.print("Choose option (1-2): ");
 
             int choice = input.readInt();
             switch (choice) {
                 case 1 -> {
+                    return true; // Continue to company setup
+                }
+                case 2 -> {
                     if (deleteAccount()) {
                         return false; // Account was deleted
                     }
-                }
-                case 2 -> {
-                    return true; // Continue to company setup
                 }
                 default -> System.out.println("Invalid choice.");
             }
@@ -45,13 +47,20 @@ public class AccountMenu {
     }
 
     private boolean deleteAccount() {
-        System.out.println("Deleting this account will remove all associated data and company associations.");
-        if (input.confirm("Are you sure you want to delete your account? (yes/no)")) {
+        System.out.println("\n⚠️  WARNING: This action cannot be undone!");
+        System.out.println("Deleting this account will remove:");
+        System.out.println("  • Your user profile");
+        System.out.println("  • All company associations");
+        System.out.println("  • Related data\n");
+        
+        String confirmation = input.readLine("Type 'DELETE' to confirm: ");
+        if ("DELETE".equals(confirmation)) {
             services.getUserService().deleteUser(context.getCurrentUserId());
-            System.out.println("Account deleted.");
+            System.out.println("\n✓ Account deleted successfully.");
             context.clearSession();
             return true;
         }
+        System.out.println("Account deletion cancelled.");
         return false;
     }
 }

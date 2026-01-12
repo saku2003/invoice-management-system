@@ -1,6 +1,7 @@
 package org.example.cli.menu;
 
 import org.example.cli.CliContext;
+import org.example.cli.DisplayFormatter;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 import org.example.entity.invoice.InvoiceDTO;
@@ -64,14 +65,7 @@ public class InvoiceItemMenu {
             return;
         }
 
-        System.out.println("\nInvoice Items:");
-        for (int i = 0; i < invoice.items().size(); i++) {
-            InvoiceItemDTO item = invoice.items().get(i);
-            System.out.println((i + 1) + ". " + item.name());
-            System.out.println("   Quantity: " + item.quantity());
-            System.out.println("   Unit Price: " + item.unitPrice());
-            System.out.println("   ---");
-        }
+        DisplayFormatter.printInvoiceItemList(invoice, invoice.items());
     }
 
     private void addInvoiceItem() {
@@ -116,12 +110,9 @@ public class InvoiceItemMenu {
             return;
         }
 
-        for (int i = 0; i < items.size(); i++) {
-            InvoiceItemDTO it = items.get(i);
-            System.out.println((i + 1) + ". " + it.name() + " | Qty: " + it.quantity() + " | Price: " + it.unitPrice());
-        }
+        DisplayFormatter.printInvoiceItemSelectionList(items);
 
-        System.out.print("Select item to update: ");
+        System.out.print("Select item to update (1-" + items.size() + "): ");
         int index = input.readInt() - 1;
         if (index < 0 || index >= items.size()) {
             System.out.println("Invalid selection");
@@ -174,12 +165,9 @@ public class InvoiceItemMenu {
             return;
         }
 
-        for (int i = 0; i < items.size(); i++) {
-            InvoiceItemDTO it = items.get(i);
-            System.out.println((i + 1) + ". " + it.name() + " | Qty: " + it.quantity() + " | Price: " + it.unitPrice());
-        }
+        DisplayFormatter.printInvoiceItemSelectionList(items);
 
-        System.out.print("Select item to remove: ");
+        System.out.print("Select item to remove (1-" + items.size() + "): ");
         int index = input.readInt() - 1;
         if (index < 0 || index >= items.size()) {
             System.out.println("Invalid selection");
