@@ -263,17 +263,8 @@ public class CliApp {
 
     private boolean createCompany() {
         System.out.println("\n--- Create Company ---");
-        String orgNum;
-        while (true) {
-            System.out.print("Organization Number (10 digits): ");
-            orgNum = scanner.nextLine().trim();
-
-            if (!orgNum.matches("\\d{10}")) {
-                System.out.println("✗ Invalid input: Organization Number must be 10 digits.");
-            } else {
-                break;
-            }
-        }
+        System.out.print("Organization Number: ");
+        String orgNum = scanner.nextLine().trim();
 
         System.out.print("Email: ");
         String email = scanner.nextLine().trim();

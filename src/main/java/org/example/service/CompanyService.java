@@ -5,7 +5,6 @@ import org.example.entity.company.*;
 import org.example.entity.user.User;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.EntityNotFoundException;
-import org.example.exception.ValidationException;
 import org.example.repository.CompanyRepository;
 import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
@@ -39,11 +38,6 @@ public class CompanyService {
             dto.name(),
             creatorUserId
         );
-
-        if (!dto.orgNum().matches("\\d{10}")) {
-            log.warn("Company creation failed: invalid organization number format {}", dto.orgNum());
-            throw new ValidationException("Organization Number must be 10 digits.");
-        }
 
         User creator = userRepository.findById(creatorUserId)
             .orElseThrow(() -> {
