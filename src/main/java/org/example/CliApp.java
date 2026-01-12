@@ -227,23 +227,37 @@ public class CliApp {
 
 
     private boolean setupCompany() {
-        System.out.println("\n--- Company Setup ---");
-        System.out.println("1. Create new company");
-        System.out.println("2. Select existing company");
-        System.out.println("3. Go back to Account settings");
-        System.out.print("Choose option (1-3): ");
+        while (true) {
+            System.out.println("\n--- Company Setup ---");
+            System.out.println("1. Create new company");
+            System.out.println("2. Select existing company");
+            System.out.println("3. Go back to Account settings");
+            System.out.print("Choose option (1-3): ");
 
-        int choice = readInt();
+            int choice = readInt();
 
-        if (choice == 1) {
-            return createCompany();
-        } else if (choice == 2) {
-            return selectCompany();
-        } else if (choice == 3) {
-            return accountMenu();
-        } else {
-            System.out.println("Invalid choice.");
-            return false;
+            if (choice == 1) {
+                if (createCompany()) {
+                    return true; // Company created successfully
+                }
+                // Continue loop to retry
+            } else if (choice == 2) {
+                if (selectCompany()) {
+                    return true; // Company selected successfully
+                }
+                // Continue loop to retry
+            } else if (choice == 3) {
+                if (accountMenu()) {
+                    // User chose "Continue to Company Setup" again
+                    // Continue loop to retry company setup
+                    continue;
+                } else {
+                    // User deleted account
+                    return false;
+                }
+            } else {
+                System.out.println("Invalid choice.");
+            }
         }
     }
 
@@ -352,6 +366,16 @@ public class CliApp {
 
     private void mainMenu() {
         while (true) {
+            // Safety check: ensure company is selected
+            if (currentCompany == null || currentCompanyId == null) {
+                System.out.println("\n✗ No company selected. Please select or create a company first.");
+                if (!setupCompany()) {
+                    System.out.println("Exiting...");
+                    return;
+                }
+                continue;
+            }
+
             System.out.println("\n=== Main Menu ===");
             System.out.println("Current Company: " + currentCompany.name() + " (" + currentCompany.orgNum() + ")");
             System.out.println("1. Client Management");
@@ -409,6 +433,10 @@ public class CliApp {
     }
 
     private void listClients() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         try {
             List<ClientDTO> clients = clientService.getClientsByCompany(currentCompanyId);
             if (clients.isEmpty()) {
@@ -429,6 +457,10 @@ public class CliApp {
     }
 
     private void createClient() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         System.out.println("\n--- Create Client ---");
 
         System.out.print("First Name: ");
@@ -478,6 +510,10 @@ public class CliApp {
 
 
     private void updateClient() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         ClientDTO client = selectClient();
         if (client == null) return;
 
@@ -529,6 +565,10 @@ public class CliApp {
 
 
     private void deleteClient() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         ClientDTO client = selectClient();
         if (client == null) return;
 
@@ -548,6 +588,10 @@ public class CliApp {
     }
 
     private void invoiceMenu() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         while (true) {
             System.out.println("\n--- Invoice Management ---");
             System.out.println("1. List Invoices");
@@ -573,6 +617,10 @@ public class CliApp {
     }
 
     private void listInvoices() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         try {
             List<InvoiceDTO> invoices = invoiceService.getInvoicesByCompany(currentCompanyId);
             if (invoices.isEmpty()) {
@@ -585,6 +633,10 @@ public class CliApp {
     }
 
     private void createInvoice() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         try {
             System.out.println("\n--- Create Invoice ---");
 
@@ -869,6 +921,10 @@ public class CliApp {
     }
 
     private ClientDTO selectClient() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return null;
+        }
         try {
             List<ClientDTO> clients = clientService.getClientsByCompany(currentCompanyId);
 
@@ -902,6 +958,10 @@ public class CliApp {
     }
 
     private InvoiceDTO selectInvoice() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return null;
+        }
         List<InvoiceDTO> invoices = invoiceService.getInvoicesByCompany(currentCompanyId);
 
         if (invoices.isEmpty()) {
@@ -926,6 +986,10 @@ public class CliApp {
     }
 
     private void companyUserMenu() {
+        if (currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         while (true) {
             System.out.println("\n--- Company Users ---");
             System.out.println("1. List Company Users");
@@ -1028,6 +1092,10 @@ public class CliApp {
 
 
     private void companySettingsMenu() {
+        if (currentCompany == null || currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         while (true) {
             System.out.println("\n--- Company Settings ---");
             System.out.println("Company: " + currentCompany.name());
@@ -1050,6 +1118,10 @@ public class CliApp {
     }
 
     private void updateCompany() {
+        if (currentCompany == null || currentCompanyId == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         System.out.println("\n--- Update Company ---");
         System.out.println("Leave blank to keep current value.");
         System.out.print("Name [" + currentCompany.name() + "]: ");
@@ -1090,6 +1162,10 @@ public class CliApp {
     }
 
     private void viewCompanyDetails() {
+        if (currentCompany == null) {
+            System.out.println("✗ No company selected.");
+            return;
+        }
         System.out.println("\n--- Company Details ---");
         System.out.println("Name: " + currentCompany.name());
         System.out.println("Org Num: " + currentCompany.orgNum());
