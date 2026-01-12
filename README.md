@@ -5,12 +5,12 @@
 ![Open Pull Requests](https://img.shields.io/github/issues-pr-raw/ithsjava25/project-jpa-grupp-3-d)
 ![Closed Pull Requests](https://img.shields.io/github/issues-pr-closed-raw/ithsjava25/project-jpa-grupp-3-d)
 
-## 📋 Overview
+## Overview
 A CLI-based Invoice Management System for small businesses. Supports user authentication, company and client management, invoice processing, and company user administration.
 
 ---
 
-## ✨ Features
+## Features
 
 **👤 User Management**
 - Register and login with secure password hashing (BCrypt)
@@ -41,7 +41,7 @@ A CLI-based Invoice Management System for small businesses. Supports user authen
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 **Domain Model:**
 User ↔ CompanyUser ↔ Company ↔ Client
@@ -60,47 +60,51 @@ User ↔ CompanyUser ↔ Company ↔ Client
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 **Prerequisites:**
-- Java 17+
+- Java 21+
 - Maven 3.6+
-- H2 Database (embedded)
+- Docker
 
 **Installation:**
 ```bash
-git clone <repository-url>
-cd invoice-management-system
+git clone https://github.com/ithsjava25/project-jpa-grupp-3-d.git
+cd project-jpa-grupp-3-d
 mvn clean compile
 mvn exec:java -Dexec.mainClass="org.example.App"
+```
 
-
-🎮 Usage Guide
-
+**Usage Guide**
+```
 1. Authentication
 Register or login
 Password validation ≥8 chars
 Email format check
-
+```
+```
 2. Company Setup
 Create new company (auto-associate creator)
 Select existing company
 Manage company information
-
+```
+```
 3. Main Operations
 Client Management: CRUD clients
 Invoice Management: Create invoices, add items, update status
 Company Users: Invite/remove users
 Company Settings: Update info
-
+```
+```
 4. Invoice Workflow
 Select client
 Enter invoice number & due date
 Add items
 Review totals & save
+```
 
-
-📁 Project Structure
+## Project Structure
+```
 src/main/java/org/example/
 ├── auth/        # Authentication services
 ├── entity/      # Domain entities & DTOs
@@ -112,72 +116,54 @@ src/main/java/org/example/
 ├── service/     # Business logic
 ├── exception/   # Custom exceptions
 └── util/        # Utilities
+```
 
-🧪 Testing
+## Testing
+```bash
 mvn test
+```
 
-Unit & integration tests
-Business rule validation
-Exception handling
-
-
-🔧 Configuration
-
-Database: Embedded H2, auto-generated schema, UUID PKs, timestamp auditing
-Logging: SLF4J with debug/info, masked emails, transaction logs
+- Unit & integration tests
+- Business rule validation
+- Exception handling
 
 
-💾 Data Persistence
+## Configuration
 
-JPA/Hibernate ORM
-Cascade operations & optimistic locking
-Auditing fields: createdAt, updatedAt
-
-
-🚫 Error Handling
-
-Custom exception hierarchy
-User-friendly messages
-Transaction rollback on failure
+- Database: MySQL 9.5.0, auto-generated schema, UUID PKs, timestamp auditing
+- Logging: SLF4J with debug/info, masked emails, transaction logs
 
 
-📊 Sample Operations
+## Sample Operations
 
-Invoice:
+**Invoice**
 
-Select client
-Enter invoice number & due date
-Add line items
-Save & review total
-
-
-Company Users:
-
-List users
-Invite by email
-Remove user (cannot remove self)
+- Select client
+- Enter invoice number & due date
+- Add line items
+- Save & review total
 
 
-Invoice Status Flow:
+**Company Users**
 
+- List company users
+- Invite by email
+- Remove user from a company
+
+
+**Invoice Status Flow**
+```
 CREATED → SENT → PAID
          ↘ OVERDUE
          ↘ CANCELLED
+```
 
 
+**Business Rules**
 
-Business Rules:
+- Unique company org numbers
+- Unique invoice numbers per company
+- Users cannot remove themselves
+- Clients belong to a single company
+- Invoice requires ≥1 item
 
-Unique company org numbers
-Unique invoice numbers per company
-Users cannot remove themselves
-Clients belong to a single company
-Invoice requires ≥1 item
-
-
-🙏 Acknowledgments
-Spring Security (password encoding)
-Lombok (reduce boilerplate)
-Hibernate ORM
-JUnit & Mockito
-CLI designed for learning & small businesses.
