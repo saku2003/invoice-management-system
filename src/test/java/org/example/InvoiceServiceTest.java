@@ -48,7 +48,8 @@ public class InvoiceServiceTest {
     void testCreateInvoice_Success() {
         UUID companyId = UUID.randomUUID();
         UUID clientId = UUID.randomUUID();
-        CreateInvoiceDTO createDto = new CreateInvoiceDTO(companyId, clientId, "INV-001", LocalDateTime.now().plusDays(14), new BigDecimal("0.25"), List.of());
+        List<InvoiceItemDTO> items = List.of(new InvoiceItemDTO(null, 1, new BigDecimal("100.00")));
+        CreateInvoiceDTO createDto = new CreateInvoiceDTO(companyId, clientId, "INV-001", LocalDateTime.now().plusDays(14), items);
 
         Company company = new Company(); company.setId(companyId);
         Client client = new Client(); client.setId(clientId);
@@ -116,7 +117,7 @@ public class InvoiceServiceTest {
     void testUpdateInvoice_Success() {
         UUID invoiceId = UUID.randomUUID();
         Invoice existingInvoice = createFullInvoice(invoiceId, "INV-123");
-        UpdateInvoiceDTO updateDto = new UpdateInvoiceDTO(invoiceId, LocalDateTime.now().plusDays(30), new BigDecimal("0.25"), List.of(new InvoiceItemDTO(null, "name", 2, new BigDecimal("500.00"))), InvoiceStatus.SENT);
+        UpdateInvoiceDTO updateDto = new UpdateInvoiceDTO(invoiceId, LocalDateTime.now().plusDays(30), List.of(new InvoiceItemDTO(null, 2, new BigDecimal("500.00"))), InvoiceStatus.SENT);
 
         when(invoiceRepository.findByIdWithItems(invoiceId)).thenReturn(Optional.of(existingInvoice));
         when(invoiceRepository.update(any(Invoice.class))).thenAnswer(i -> i.getArgument(0));
@@ -152,7 +153,8 @@ public class InvoiceServiceTest {
     @Test
     void testCreateInvoice_CompanyNotFound() {
         UUID companyId = UUID.randomUUID();
-        CreateInvoiceDTO dto = new CreateInvoiceDTO(companyId, UUID.randomUUID(), "INV-X", LocalDateTime.now(), new BigDecimal("0.25"), List.of());
+        List<InvoiceItemDTO> items = List.of(new InvoiceItemDTO(null, 1, new BigDecimal("100.00")));
+        CreateInvoiceDTO dto = new CreateInvoiceDTO(companyId, UUID.randomUUID(), "INV-X", LocalDateTime.now(), items);
 
         when(companyRepository.findById(companyId)).thenReturn(Optional.empty());
 
@@ -164,7 +166,8 @@ public class InvoiceServiceTest {
     void testCreateInvoice_ClientNotFound() {
         UUID companyId = UUID.randomUUID();
         UUID clientId = UUID.randomUUID();
-        CreateInvoiceDTO dto = new CreateInvoiceDTO(companyId, clientId, "INV-X", LocalDateTime.now(), new BigDecimal("0.25"), List.of());
+        List<InvoiceItemDTO> items = List.of(new InvoiceItemDTO(null, 1, new BigDecimal("100.00")));
+        CreateInvoiceDTO dto = new CreateInvoiceDTO(companyId, clientId, "INV-X", LocalDateTime.now(), items);
 
         when(companyRepository.findById(companyId)).thenReturn(Optional.of(new Company()));
         when(clientRepository.findById(clientId)).thenReturn(Optional.empty());
@@ -176,7 +179,7 @@ public class InvoiceServiceTest {
     @Test
     void testUpdateInvoice_InvoiceNotFound() {
         UUID id = UUID.randomUUID();
-        UpdateInvoiceDTO dto = new UpdateInvoiceDTO(id, LocalDateTime.now(), new BigDecimal("0.25"), List.of(), InvoiceStatus.SENT);
+        UpdateInvoiceDTO dto = new UpdateInvoiceDTO(id, LocalDateTime.now(), List.of(), InvoiceStatus.SENT);
 
         when(invoiceRepository.findByIdWithItems(id)).thenReturn(Optional.empty());
 
@@ -204,8 +207,11 @@ public class InvoiceServiceTest {
 
     @Test
     void testCreateInvoice_NumberAlreadyExists() {
-        CreateInvoiceDTO createDto = new CreateInvoiceDTO(UUID.randomUUID(), UUID.randomUUID(), "INV-EXIST", LocalDateTime.now(), new BigDecimal("0.25"), List.of());
+        List<InvoiceItemDTO> items = List.of(new InvoiceItemDTO(null, 1, new BigDecimal("100.00")));
+        CreateInvoiceDTO createDto = new CreateInvoiceDTO(UUID.randomUUID(), UUID.randomUUID(), "INV-EXIST", LocalDateTime.now(), items);
         when(invoiceRepository.findByInvoiceNumber("INV-EXIST")).thenReturn(Optional.of(new Invoice()));
+        when(companyRepository.findById(any())).thenReturn(Optional.of(new Company()));
+        when(clientRepository.findById(any())).thenReturn(Optional.of(new Client()));
         assertThrows(BusinessRuleException.class, () -> invoiceService.createInvoice(createDto));
     }
 
