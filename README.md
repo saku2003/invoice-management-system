@@ -74,7 +74,7 @@ Repository, DTO, Dependency Injection, Builder
 git clone https://github.com/ithsjava25/project-jpa-grupp-3-d.git
 cd project-jpa-grupp-3-d
 mvn clean compile
-mvn exec:java -Dexec.mainClass="org.example.App"
+mvn exec:java -Dexec.mainClass="org.example.InvoiceManagementApplication"
 ```
 
 **Usage Guide**

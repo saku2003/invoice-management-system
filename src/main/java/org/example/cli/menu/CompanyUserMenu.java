@@ -12,9 +12,7 @@ import org.example.exception.ValidationException;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Handles company user management - add/remove users from the current company.
- */
+
 public class CompanyUserMenu {
     private final CliContext context;
     private final InputHelper input;

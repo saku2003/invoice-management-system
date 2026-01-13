@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-/**
- * Handles invoice item operations - add, update, remove items from invoices.
- */
+
 public class InvoiceItemMenu {
     private final CliContext context;
     private final InputHelper input;

@@ -6,10 +6,7 @@ import org.example.repository.*;
 import org.example.service.*;
 import org.example.util.JpaUtil;
 
-/**
- * Container for all services used by the CLI application.
- * Centralizes dependency injection and service initialization.
- */
+
 public class ServiceContainer {
     private final EntityManagerFactory emf;
 

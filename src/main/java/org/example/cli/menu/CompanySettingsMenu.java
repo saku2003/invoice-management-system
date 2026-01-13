@@ -7,9 +7,7 @@ import org.example.cli.ServiceContainer;
 import org.example.entity.company.CompanyDTO;
 import org.example.entity.company.UpdateCompanyDTO;
 
-/**
- * Handles company settings - view and update company details.
- */
+
 public class CompanySettingsMenu {
     private final CliContext context;
     private final InputHelper input;

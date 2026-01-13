@@ -15,9 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Handles invoice management - CRUD operations for invoices.
- */
+
 public class InvoiceMenu {
     private final CliContext context;
     private final InputHelper input;

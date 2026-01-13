@@ -10,9 +10,7 @@ import org.example.exception.ValidationException;
 
 import java.util.List;
 
-/**
- * Handles company setup - creating and selecting companies.
- */
+
 public class CompanySetupMenu {
     private final CliContext context;
     private final InputHelper input;

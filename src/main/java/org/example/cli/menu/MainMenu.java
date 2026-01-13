@@ -4,9 +4,7 @@ import org.example.cli.CliContext;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 
-/**
- * Main navigation menu - hub for all major features.
- */
+
 public class MainMenu {
     private final CliContext context;
     private final InputHelper input;

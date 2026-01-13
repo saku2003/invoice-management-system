@@ -2,10 +2,7 @@ package org.example.cli;
 
 import java.util.Scanner;
 
-/**
- * Utility class for handling user input from the command line.
- * Wraps Scanner and provides convenient methods for reading different types.
- */
+
 public class InputHelper {
     private final Scanner scanner;
 

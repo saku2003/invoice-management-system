@@ -12,9 +12,7 @@ import org.example.exception.ValidationException;
 
 import java.util.List;
 
-/**
- * Handles client management - CRUD operations for clients.
- */
+
 public class ClientMenu {
     private final CliContext context;
     private final InputHelper input;

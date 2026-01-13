@@ -9,9 +9,7 @@ import org.example.exception.AuthenticationException;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.ValidationException;
 
-/**
- * Handles user authentication - login and registration.
- */
+
 public class AuthMenu {
     private final CliContext context;
     private final InputHelper input;
