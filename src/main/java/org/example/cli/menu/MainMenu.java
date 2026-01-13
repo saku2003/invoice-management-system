@@ -4,9 +4,7 @@ import org.example.cli.CliContext;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 
-/**
- * Main navigation menu - hub for all major features.
- */
+
 public class MainMenu {
     private final CliContext context;
     private final InputHelper input;
@@ -32,10 +30,6 @@ public class MainMenu {
         this.companySettingsMenu = new CompanySettingsMenu(context, input, services);
     }
 
-    /**
-     * Shows the main menu loop.
-     * @return true if user logged out, false if setup failed
-     */
     public boolean show() {
         while (true) {
             // Safety check: ensure company is selected

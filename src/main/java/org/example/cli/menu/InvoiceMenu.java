@@ -5,7 +5,10 @@ import org.example.cli.DisplayFormatter;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 import org.example.entity.client.ClientDTO;
-import org.example.entity.invoice.*;
+import org.example.entity.invoice.CreateInvoiceDTO;
+import org.example.entity.invoice.InvoiceDTO;
+import org.example.entity.invoice.InvoiceItemDTO;
+import org.example.entity.invoice.InvoiceStatus;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.EntityNotFoundException;
 import org.example.exception.ValidationException;
@@ -15,9 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Handles invoice management - CRUD operations for invoices.
- */
+
 public class InvoiceMenu {
     private final CliContext context;
     private final InputHelper input;
@@ -56,7 +57,9 @@ public class InvoiceMenu {
                 case 3 -> updateInvoiceStatus();
                 case 4 -> invoiceItemMenu.show();
                 case 5 -> deleteInvoice();
-                case 6 -> { return; }
+                case 6 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }
@@ -196,10 +199,6 @@ public class InvoiceMenu {
         }
     }
 
-    /**
-     * Displays a list of invoices and allows the user to select one.
-     * @return the selected InvoiceDTO, or null if cancelled/no invoices
-     */
     public InvoiceDTO selectInvoice() {
         if (!context.hasCompanySelected()) {
             System.out.println("✗ No company selected.");

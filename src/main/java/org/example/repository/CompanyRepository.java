@@ -5,7 +5,7 @@ import org.example.entity.company.Company;
 
 import java.util.UUID;
 
-public class CompanyRepository extends BaseRepository<Company, UUID>{
+public class CompanyRepository extends BaseRepository<Company, UUID> {
     public CompanyRepository(EntityManagerFactory emf) {
         super(emf, Company.class);
     }

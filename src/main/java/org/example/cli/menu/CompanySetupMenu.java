@@ -3,16 +3,17 @@ package org.example.cli.menu;
 import org.example.cli.CliContext;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
-import org.example.entity.company.*;
+import org.example.entity.company.Company;
+import org.example.entity.company.CompanyDTO;
+import org.example.entity.company.CompanyUser;
+import org.example.entity.company.CreateCompanyDTO;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.EntityNotFoundException;
 import org.example.exception.ValidationException;
 
 import java.util.List;
 
-/**
- * Handles company setup - creating and selecting companies.
- */
+
 public class CompanySetupMenu {
     private final CliContext context;
     private final InputHelper input;
@@ -26,10 +27,6 @@ public class CompanySetupMenu {
         this.accountMenu = accountMenu;
     }
 
-    /**
-     * Shows the company setup menu.
-     * @return true if company was selected/created, false if user wants to go back to auth
-     */
     public boolean show() {
         while (true) {
             System.out.println("\n--- Company Setup ---");

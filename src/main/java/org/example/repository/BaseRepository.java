@@ -6,10 +6,10 @@ import jakarta.persistence.EntityManagerFactory;
 import java.util.Optional;
 import java.util.function.Function;
 
-public abstract class BaseRepository <T, ID> {
+public abstract class BaseRepository<T, ID> {
 
+    protected final Class<T> entityClass;
     private final EntityManagerFactory emf;
-    protected final Class <T> entityClass;
 
     protected BaseRepository(EntityManagerFactory emf, Class<T> entityClass) {
         this.emf = emf;

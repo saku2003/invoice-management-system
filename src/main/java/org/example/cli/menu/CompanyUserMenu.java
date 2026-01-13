@@ -12,9 +12,7 @@ import org.example.exception.ValidationException;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Handles company user management - add/remove users from the current company.
- */
+
 public class CompanyUserMenu {
     private final CliContext context;
     private final InputHelper input;
@@ -45,7 +43,9 @@ public class CompanyUserMenu {
                 case 1 -> listCompanyUsers();
                 case 2 -> addUserToCompany();
                 case 3 -> removeUserFromCompany();
-                case 4 -> { return; }
+                case 4 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }

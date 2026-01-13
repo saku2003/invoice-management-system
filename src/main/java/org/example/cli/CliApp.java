@@ -1,19 +1,13 @@
 package org.example.cli;
 
-import org.example.cli.menu.*;
+import org.example.cli.menu.AccountMenu;
+import org.example.cli.menu.AuthMenu;
+import org.example.cli.menu.CompanySetupMenu;
+import org.example.cli.menu.MainMenu;
 
 import java.util.Scanner;
 
-/**
- * CLI Application for Invoice Management System
- * <p>
- * Workflow:
- * 1. User logs in or registers
- * 2. User creates or selects a company (creator is auto-associated)
- * 3. All operations are scoped to the current company
- * <p>
- * This class serves as the main entry point and orchestrates the various menus.
- */
+
 public class CliApp {
     private final CliContext context;
     private final InputHelper input;
@@ -75,13 +69,13 @@ public class CliApp {
 
     private void printBanner() {
         System.out.println("""
-██╗███╗   ██╗██╗   ██╗ ██████╗ ██╗ ██████╗██╗███╗   ██╗ ██████╗      █████╗ ██████╗ ██████╗
-██║████╗  ██║██║   ██║██╔═══██╗██║██╔════╝██║████╗  ██║██╔════╝     ██╔══██╗██╔══██╗██╔══██╗
-██║██╔██╗ ██║██║   ██║██║   ██║██║██║     ██║██╔██╗ ██║██║  ███╗    ███████║██████╔╝██████╔╝
-██║██║╚██╗██║╚██╗ ██╔╝██║   ██║██║██║     ██║██║╚██╗██║██║   ██║    ██╔══██║██╔═══╝ ██╔═══╝
-██║██║ ╚████║ ╚████╔╝ ╚██████╔╝██║╚██████╗██║██║ ╚████║╚██████╔╝    ██║  ██║██║     ██║
-╚═╝╚═╝  ╚═══╝  ╚═══╝   ╚═════╝ ╚═╝ ╚═════╝╚═╝╚═╝  ╚═══╝ ╚═════╝     ╚═╝  ╚═╝╚═╝     ╚═╝
-""");
+            ██╗███╗   ██╗██╗   ██╗ ██████╗ ██╗ ██████╗██╗███╗   ██╗ ██████╗      █████╗ ██████╗ ██████╗
+            ██║████╗  ██║██║   ██║██╔═══██╗██║██╔════╝██║████╗  ██║██╔════╝     ██╔══██╗██╔══██╗██╔══██╗
+            ██║██╔██╗ ██║██║   ██║██║   ██║██║██║     ██║██╔██╗ ██║██║  ███╗    ███████║██████╔╝██████╔╝
+            ██║██║╚██╗██║╚██╗ ██╔╝██║   ██║██║██║     ██║██║╚██╗██║██║   ██║    ██╔══██║██╔═══╝ ██╔═══╝
+            ██║██║ ╚████║ ╚████╔╝ ╚██████╔╝██║╚██████╗██║██║ ╚████║╚██████╔╝    ██║  ██║██║     ██║
+            ╚═╝╚═╝  ╚═══╝  ╚═══╝   ╚═════╝ ╚═╝ ╚═════╝╚═╝╚═╝  ╚═══╝ ╚═════╝     ╚═╝  ╚═╝╚═╝     ╚═╝
+            """);
     }
 }
 

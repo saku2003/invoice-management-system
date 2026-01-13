@@ -1,17 +1,16 @@
-package org.example;
+package org.example.service;
 
-import org.example.entity.invoice.InvoiceDTO;
-import org.example.entity.company.Company;
 import org.example.entity.client.Client;
+import org.example.entity.company.Company;
 import org.example.entity.invoice.*;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.EntityNotFoundException;
 import org.example.repository.ClientRepository;
 import org.example.repository.CompanyRepository;
 import org.example.repository.InvoiceRepository;
-import org.example.service.InvoiceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,8 +50,10 @@ public class InvoiceServiceTest {
         List<InvoiceItemDTO> items = List.of(new InvoiceItemDTO(null, "Test Item", 1, new BigDecimal("100.00")));
         CreateInvoiceDTO createDto = new CreateInvoiceDTO(companyId, clientId, "INV-001", LocalDateTime.now().plusDays(14), new BigDecimal("0.25"), items);
 
-        Company company = new Company(); company.setId(companyId);
-        Client client = new Client(); client.setId(clientId);
+        Company company = new Company();
+        company.setId(companyId);
+        Client client = new Client();
+        client.setId(clientId);
 
         when(companyRepository.findById(companyId)).thenReturn(Optional.of(company));
         when(clientRepository.findById(clientId)).thenReturn(Optional.of(client));
@@ -223,10 +224,12 @@ public class InvoiceServiceTest {
         invoice.setStatus(InvoiceStatus.CREATED);
         invoice.setCreatedAt(LocalDateTime.now());
 
-        Company company = new Company(); company.setId(UUID.randomUUID());
+        Company company = new Company();
+        company.setId(UUID.randomUUID());
         invoice.setCompany(company);
 
-        Client client = new Client(); client.setId(UUID.randomUUID());
+        Client client = new Client();
+        client.setId(UUID.randomUUID());
         invoice.setClient(client);
 
         return invoice;

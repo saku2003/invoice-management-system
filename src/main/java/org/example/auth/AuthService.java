@@ -1,8 +1,8 @@
 package org.example.auth;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.user.UserDTO;
 import org.example.entity.user.User;
+import org.example.entity.user.UserDTO;
 import org.example.exception.AuthenticationException;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;

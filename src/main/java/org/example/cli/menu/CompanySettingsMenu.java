@@ -7,9 +7,7 @@ import org.example.cli.ServiceContainer;
 import org.example.entity.company.CompanyDTO;
 import org.example.entity.company.UpdateCompanyDTO;
 
-/**
- * Handles company settings - view and update company details.
- */
+
 public class CompanySettingsMenu {
     private final CliContext context;
     private final InputHelper input;
@@ -42,7 +40,9 @@ public class CompanySettingsMenu {
             switch (choice) {
                 case 1 -> updateCompany();
                 case 2 -> viewCompanyDetails();
-                case 3 -> { return; }
+                case 3 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }

@@ -1,7 +1,7 @@
 package org.example.service;
 
-import org.example.entity.client.ClientDTO;
 import org.example.entity.client.Client;
+import org.example.entity.client.ClientDTO;
 import org.example.entity.client.CreateClientDTO;
 import org.example.entity.client.UpdateClientDTO;
 import org.example.entity.company.Company;
@@ -20,12 +20,11 @@ import static org.mockito.Mockito.*;
 
 public class ClientServiceTest {
 
+    private final Company company = new Company();
     private ClientRepository clientRepository;
     private ClientService clientService;
     private CompanyRepository companyRepository;
-
     private UUID companyId;
-    private final Company company = new Company();
 
     @BeforeEach
     void setUp() {

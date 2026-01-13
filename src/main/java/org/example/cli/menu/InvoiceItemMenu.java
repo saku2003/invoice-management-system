@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-/**
- * Handles invoice item operations - add, update, remove items from invoices.
- */
+
 public class InvoiceItemMenu {
     private final CliContext context;
     private final InputHelper input;
@@ -50,7 +48,9 @@ public class InvoiceItemMenu {
                 case 2 -> addInvoiceItem();
                 case 3 -> updateInvoiceItem();
                 case 4 -> removeInvoiceItem();
-                case 5 -> { return; }
+                case 5 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }
@@ -193,10 +193,6 @@ public class InvoiceItemMenu {
         }
     }
 
-    /**
-     * Reads invoice items from user input during invoice creation.
-     * @return list of InvoiceItemDTOs entered by the user
-     */
     public List<InvoiceItemDTO> readInvoiceItems() {
         List<InvoiceItemDTO> items = new ArrayList<>();
 

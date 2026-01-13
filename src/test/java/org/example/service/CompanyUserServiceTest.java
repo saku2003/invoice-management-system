@@ -1,6 +1,8 @@
 package org.example.service;
 
-import org.example.entity.company.*;
+import org.example.entity.company.Company;
+import org.example.entity.company.CompanyUser;
+import org.example.entity.company.CompanyUserId;
 import org.example.entity.user.User;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.EntityNotFoundException;
@@ -19,7 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 

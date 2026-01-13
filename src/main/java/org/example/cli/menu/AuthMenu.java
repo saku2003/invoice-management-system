@@ -9,9 +9,7 @@ import org.example.exception.AuthenticationException;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.ValidationException;
 
-/**
- * Handles user authentication - login and registration.
- */
+
 public class AuthMenu {
     private final CliContext context;
     private final InputHelper input;
@@ -23,10 +21,6 @@ public class AuthMenu {
         this.services = services;
     }
 
-    /**
-     * Shows the authentication menu and handles login/registration.
-     * @return true if authentication was successful
-     */
     public boolean show() {
         System.out.println("--- Authentication ---");
         System.out.println("1. Login");

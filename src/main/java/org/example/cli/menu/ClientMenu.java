@@ -12,9 +12,7 @@ import org.example.exception.ValidationException;
 
 import java.util.List;
 
-/**
- * Handles client management - CRUD operations for clients.
- */
+
 public class ClientMenu {
     private final CliContext context;
     private final InputHelper input;
@@ -43,7 +41,9 @@ public class ClientMenu {
                 case 2 -> createClient();
                 case 3 -> updateClient();
                 case 4 -> deleteClient();
-                case 5 -> { return; }
+                case 5 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }
@@ -151,7 +151,7 @@ public class ClientMenu {
         if (client == null) return;
 
         if (input.confirmInline("Are you sure you want to delete " +
-                client.firstName() + " " + client.lastName() + "? (yes/no): ")) {
+            client.firstName() + " " + client.lastName() + "? (yes/no): ")) {
             try {
                 services.getClientService().deleteClient(client.id());
                 System.out.println("✓ Client deleted successfully!");
@@ -163,10 +163,6 @@ public class ClientMenu {
         }
     }
 
-    /**
-     * Displays a list of clients and allows the user to select one.
-     * @return the selected ClientDTO, or null if cancelled/no clients
-     */
     public ClientDTO selectClient() {
         if (!context.hasCompanySelected()) {
             System.out.println("✗ No company selected.");

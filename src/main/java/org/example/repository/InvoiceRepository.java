@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class InvoiceRepository extends BaseRepository<Invoice, UUID>{
+public class InvoiceRepository extends BaseRepository<Invoice, UUID> {
     public InvoiceRepository(EntityManagerFactory emf) {
         super(emf, Invoice.class);
     }
@@ -44,17 +44,17 @@ public class InvoiceRepository extends BaseRepository<Invoice, UUID>{
 
     //Fetch all invoices by a certain company
     public List<Invoice> findAllByCompanyId(UUID companyId) {
-        return executeRead(em->{
+        return executeRead(em -> {
             return em.createQuery(
                     "SELECT i FROM Invoice i LEFT JOIN FETCH i.invoiceItems WHERE i.company.id = :companyId", Invoice.class)
-                    .setParameter("companyId", companyId)
+                .setParameter("companyId", companyId)
                 .getResultList();
         });
     }
 
     //Fetch all invoices for a certain client
-    public List<Invoice> findAllByClientId (UUID clientId) {
-        return executeRead(em->{
+    public List<Invoice> findAllByClientId(UUID clientId) {
+        return executeRead(em -> {
             return em.createQuery(
                     "SELECT i FROM Invoice i LEFT JOIN FETCH i.invoiceItems WHERE i.client.id = :clientId", Invoice.class)
                 .setParameter("clientId", clientId)

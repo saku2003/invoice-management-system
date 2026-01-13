@@ -5,10 +5,7 @@ import org.example.entity.user.UserDTO;
 
 import java.util.UUID;
 
-/**
- * Holds the current session state for the CLI application.
- * Shared across all menu handlers to track logged-in user and selected company.
- */
+
 public class CliContext {
     private UUID currentUserId;
     private UUID currentCompanyId;
