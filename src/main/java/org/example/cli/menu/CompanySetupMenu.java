@@ -24,10 +24,6 @@ public class CompanySetupMenu {
         this.accountMenu = accountMenu;
     }
 
-    /**
-     * Shows the company setup menu.
-     * @return true if company was selected/created, false if user wants to go back to auth
-     */
     public boolean show() {
         while (true) {
             System.out.println("\n--- Company Setup ---");

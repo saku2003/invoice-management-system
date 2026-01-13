@@ -161,10 +161,6 @@ public class ClientMenu {
         }
     }
 
-    /**
-     * Displays a list of clients and allows the user to select one.
-     * @return the selected ClientDTO, or null if cancelled/no clients
-     */
     public ClientDTO selectClient() {
         if (!context.hasCompanySelected()) {
             System.out.println("✗ No company selected.");

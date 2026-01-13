@@ -191,10 +191,6 @@ public class InvoiceItemMenu {
         }
     }
 
-    /**
-     * Reads invoice items from user input during invoice creation.
-     * @return list of InvoiceItemDTOs entered by the user
-     */
     public List<InvoiceItemDTO> readInvoiceItems() {
         List<InvoiceItemDTO> items = new ArrayList<>();
 

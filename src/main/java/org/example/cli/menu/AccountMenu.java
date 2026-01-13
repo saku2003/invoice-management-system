@@ -17,10 +17,6 @@ public class AccountMenu {
         this.services = services;
     }
 
-    /**
-     * Shows the account menu.
-     * @return true if user wants to continue, false if account was deleted
-     */
     public boolean show() {
         while (true) {
             DisplayFormatter.printWelcome(context.getCurrentUser());

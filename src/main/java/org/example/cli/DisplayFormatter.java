@@ -21,44 +21,24 @@ public class DisplayFormatter {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // MENU HEADERS
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    /**
-     * Prints a consistent menu header.
-     */
     public static void printMenuHeader(String title) {
         System.out.println("\n" + DOUBLE_DIVIDER);
         System.out.println("  " + title);
         System.out.println(DOUBLE_DIVIDER);
     }
 
-    /**
-     * Prints a section header.
-     */
     public static void printSectionHeader(String title) {
         System.out.println("\n" + DIVIDER);
         System.out.println("  " + title);
         System.out.println(DIVIDER);
     }
 
-    /**
-     * Prints a footer with count.
-     */
     public static void printFooter(int count, String itemName) {
         System.out.println(DOUBLE_DIVIDER);
         System.out.println("  Total: " + count + " " + itemName + (count != 1 ? "s" : ""));
         System.out.println(DOUBLE_DIVIDER);
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // USER DISPLAY
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    /**
-     * Prints welcome message for logged-in user.
-     */
     public static void printWelcome(UserDTO user) {
         System.out.println("\n" + DIVIDER);
         System.out.println("  👤 Welcome, " + user.firstName() + " " + user.lastName());
@@ -66,13 +46,6 @@ public class DisplayFormatter {
         System.out.println(DIVIDER);
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // CLIENT DISPLAY
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    /**
-     * Prints a list of clients.
-     */
     public static void printClientList(List<ClientDTO> clients) {
         printMenuHeader("CLIENTS");
 
@@ -83,9 +56,6 @@ public class DisplayFormatter {
         printFooter(clients.size(), "client");
     }
 
-    /**
-     * Prints a single client card.
-     */
     public static void printClientCard(int index, ClientDTO client) {
         System.out.println(DIVIDER);
         System.out.println("  #" + index + "  " + client.firstName() + " " + client.lastName());
@@ -97,9 +67,6 @@ public class DisplayFormatter {
         System.out.println("  Country : " + nullSafe(client.country()));
     }
 
-    /**
-     * Prints client selection list (compact).
-     */
     public static void printClientSelectionList(List<ClientDTO> clients) {
         printSectionHeader("SELECT CLIENT");
 
@@ -116,13 +83,6 @@ public class DisplayFormatter {
         System.out.println(DIVIDER);
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // COMPANY DISPLAY
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    /**
-     * Prints company details.
-     */
     public static void printCompanyDetails(CompanyDTO company) {
         printMenuHeader("COMPANY DETAILS");
         System.out.println(DIVIDER);
@@ -140,21 +100,11 @@ public class DisplayFormatter {
         System.out.println(DOUBLE_DIVIDER);
     }
 
-    /**
-     * Prints company summary (for menu headers).
-     */
     public static void printCompanySummary(CompanyDTO company) {
         System.out.println("  🏢 " + company.name());
         System.out.println("     Org: " + company.orgNum() + "  |  " + nullSafe(company.email()));
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // COMPANY USER DISPLAY
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    /**
-     * Prints list of company users.
-     */
     public static void printCompanyUserList(List<CompanyUser> users) {
         printMenuHeader("COMPANY USERS");
 
@@ -169,9 +119,6 @@ public class DisplayFormatter {
         printFooter(users.size(), "user");
     }
 
-    /**
-     * Prints company user selection list (compact).
-     */
     public static void printCompanyUserSelectionList(List<CompanyUser> users) {
         printSectionHeader("SELECT USER");
 
@@ -189,9 +136,6 @@ public class DisplayFormatter {
         System.out.println(DIVIDER);
     }
 
-    /**
-     * Formats a list of invoices for display.
-     */
     public static void printInvoiceList(List<InvoiceDTO> invoices) {
         System.out.println("\n" + DOUBLE_DIVIDER);
         System.out.println("  INVOICES");
@@ -207,9 +151,6 @@ public class DisplayFormatter {
         System.out.println(DOUBLE_DIVIDER);
     }
 
-    /**
-     * Formats a single invoice as a card display.
-     */
     public static void printInvoiceCard(int index, InvoiceDTO invoice) {
         System.out.println(DIVIDER);
         System.out.println("  #" + index + "  Invoice: " + invoice.number());
@@ -223,9 +164,6 @@ public class DisplayFormatter {
         System.out.println("  Created     : " + (invoice.createdAt() != null ? invoice.createdAt().format(DATETIME_FORMAT) : "N/A"));
     }
 
-    /**
-     * Formats a compact invoice line for selection lists.
-     */
     public static void printInvoiceSelectionList(List<InvoiceDTO> invoices) {
         System.out.println("\n" + DIVIDER);
         System.out.println("  SELECT INVOICE");
@@ -247,9 +185,6 @@ public class DisplayFormatter {
         System.out.println(DIVIDER);
     }
 
-    /**
-     * Formats invoice items for display.
-     */
     public static void printInvoiceItemList(InvoiceDTO invoice, List<InvoiceItemDTO> items) {
         System.out.println("\n" + DOUBLE_DIVIDER);
         System.out.println("  INVOICE ITEMS - " + invoice.number());
@@ -279,9 +214,6 @@ public class DisplayFormatter {
         System.out.println(DOUBLE_DIVIDER);
     }
 
-    /**
-     * Formats invoice items for selection (compact view).
-     */
     public static void printInvoiceItemSelectionList(List<InvoiceItemDTO> items) {
         System.out.println("\n" + DIVIDER);
         System.out.println("  SELECT ITEM");
@@ -303,10 +235,6 @@ public class DisplayFormatter {
         }
         System.out.println(DIVIDER);
     }
-
-    // ═══════════════════════════════════════════════════════════════════════════
-    // HELPER METHODS
-    // ═══════════════════════════════════════════════════════════════════════════
 
     private static String formatCurrency(BigDecimal amount) {
         if (amount == null) return "0.00";

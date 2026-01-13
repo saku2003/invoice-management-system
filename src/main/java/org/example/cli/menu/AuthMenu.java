@@ -21,10 +21,6 @@ public class AuthMenu {
         this.services = services;
     }
 
-    /**
-     * Shows the authentication menu and handles login/registration.
-     * @return true if authentication was successful
-     */
     public boolean show() {
         System.out.println("--- Authentication ---");
         System.out.println("1. Login");

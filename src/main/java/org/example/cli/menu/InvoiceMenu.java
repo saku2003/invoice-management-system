@@ -194,10 +194,6 @@ public class InvoiceMenu {
         }
     }
 
-    /**
-     * Displays a list of invoices and allows the user to select one.
-     * @return the selected InvoiceDTO, or null if cancelled/no invoices
-     */
     public InvoiceDTO selectInvoice() {
         if (!context.hasCompanySelected()) {
             System.out.println("✗ No company selected.");
