@@ -16,7 +16,7 @@ public record UserDTO(
     LocalDateTime updatedAt
 ) {
 
-    public static UserDTO fromEntity (User user) {
+    public static UserDTO fromEntity(User user) {
         return UserDTO.builder()
             .id(user.getId())
             .firstName(user.getFirstName())

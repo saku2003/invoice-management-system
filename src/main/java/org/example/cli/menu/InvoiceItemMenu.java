@@ -48,7 +48,9 @@ public class InvoiceItemMenu {
                 case 2 -> addInvoiceItem();
                 case 3 -> updateInvoiceItem();
                 case 4 -> removeInvoiceItem();
-                case 5 -> { return; }
+                case 5 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }

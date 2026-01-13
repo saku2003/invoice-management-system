@@ -5,7 +5,10 @@ import org.example.cli.DisplayFormatter;
 import org.example.cli.InputHelper;
 import org.example.cli.ServiceContainer;
 import org.example.entity.client.ClientDTO;
-import org.example.entity.invoice.*;
+import org.example.entity.invoice.CreateInvoiceDTO;
+import org.example.entity.invoice.InvoiceDTO;
+import org.example.entity.invoice.InvoiceItemDTO;
+import org.example.entity.invoice.InvoiceStatus;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.EntityNotFoundException;
 import org.example.exception.ValidationException;
@@ -54,7 +57,9 @@ public class InvoiceMenu {
                 case 3 -> updateInvoiceStatus();
                 case 4 -> invoiceItemMenu.show();
                 case 5 -> deleteInvoice();
-                case 6 -> { return; }
+                case 6 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }

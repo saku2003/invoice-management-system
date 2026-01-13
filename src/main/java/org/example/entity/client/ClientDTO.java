@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
-public record ClientDTO (
+public record ClientDTO(
     UUID id,
     UUID companyId,
     String firstName,
@@ -19,7 +19,7 @@ public record ClientDTO (
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 
-){
+) {
 
 
     public static ClientDTO fromEntity(Client client) {

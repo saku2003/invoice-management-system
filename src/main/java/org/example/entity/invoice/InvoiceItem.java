@@ -27,9 +27,9 @@ public class InvoiceItem {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column (name= "quantity", nullable = false)
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @Column ( name= "unit_price", nullable = false)
+    @Column(name = "unit_price", nullable = false)
     private BigDecimal unitPrice;
 }

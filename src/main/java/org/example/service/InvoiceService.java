@@ -1,5 +1,6 @@
 package org.example.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.entity.client.Client;
 import org.example.entity.company.Company;
 import org.example.entity.invoice.*;
@@ -9,7 +10,7 @@ import org.example.repository.ClientRepository;
 import org.example.repository.CompanyRepository;
 import org.example.repository.InvoiceRepository;
 import org.example.util.ValidationUtil;
-import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

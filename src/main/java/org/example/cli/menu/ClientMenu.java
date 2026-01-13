@@ -41,7 +41,9 @@ public class ClientMenu {
                 case 2 -> createClient();
                 case 3 -> updateClient();
                 case 4 -> deleteClient();
-                case 5 -> { return; }
+                case 5 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }
@@ -149,7 +151,7 @@ public class ClientMenu {
         if (client == null) return;
 
         if (input.confirmInline("Are you sure you want to delete " +
-                client.firstName() + " " + client.lastName() + "? (yes/no): ")) {
+            client.firstName() + " " + client.lastName() + "? (yes/no): ")) {
             try {
                 services.getClientService().deleteClient(client.id());
                 System.out.println("✓ Client deleted successfully!");

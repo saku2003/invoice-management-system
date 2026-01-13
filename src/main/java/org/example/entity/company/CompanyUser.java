@@ -29,8 +29,9 @@ public class CompanyUser {
     private Company company;
 
     public CompanyUser(User user, Company company) {
-        if(user.getId() == null || company.getId() == null) {
-            throw new IllegalArgumentException("User and Company must have IDs set");}
+        if (user.getId() == null || company.getId() == null) {
+            throw new IllegalArgumentException("User and Company must have IDs set");
+        }
         this.id = new CompanyUserId(user.getId(), company.getId());
         this.user = user;
         this.company = company;

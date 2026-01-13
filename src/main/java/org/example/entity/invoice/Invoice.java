@@ -2,17 +2,19 @@ package org.example.entity.invoice;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.entity.company.Company;
 import org.example.entity.client.Client;
+import org.example.entity.company.Company;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table (name="invoices")
+@Table(name = "invoices")
 @Getter
 @Setter
 @Builder
@@ -22,7 +24,7 @@ import java.util.*;
 public class Invoice {
 
     @Id
-    @GeneratedValue (strategy= GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne(optional = false)
@@ -33,10 +35,10 @@ public class Invoice {
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
-    @Column (name= "number", nullable = false, unique = true)
+    @Column(name = "number", nullable = false, unique = true)
     private String number;
 
-    @Column(name= "amount", nullable = false, precision = 19, scale = 2)
+    @Column(name = "amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
     @Column(name = "vat_rate", precision = 5, scale = 4)
@@ -44,7 +46,7 @@ public class Invoice {
 
     private BigDecimal vatAmount;
 
-    @Column(name= "due_date")
+    @Column(name = "due_date")
     private LocalDateTime dueDate;
 
     @CreationTimestamp
@@ -58,28 +60,6 @@ public class Invoice {
 
     @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
-
-    public void addItem(InvoiceItem item) {
-        invoiceItems.add(item);
-        item.setInvoice(this);
-        recalcTotals();
-    }
-
-    public void clearItems() {
-        invoiceItems.clear();
-        recalcTotals();
-    }
-
-    public void recalcTotals() {
-        BigDecimal subTotal = invoiceItems.stream()
-            .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal vat = (vatRate != null ? vatRate : BigDecimal.ZERO)
-            .multiply(subTotal);
-        this.vatAmount = vat;
-        this.amount = subTotal.add(vat);
-    }
 
     public static Invoice fromDTO(CreateInvoiceDTO dto, Company company, Client client) {
         if (dto.vatRate() != null) {
@@ -110,5 +90,27 @@ public class Invoice {
 
         invoice.recalcTotals();
         return invoice;
+    }
+
+    public void addItem(InvoiceItem item) {
+        invoiceItems.add(item);
+        item.setInvoice(this);
+        recalcTotals();
+    }
+
+    public void clearItems() {
+        invoiceItems.clear();
+        recalcTotals();
+    }
+
+    public void recalcTotals() {
+        BigDecimal subTotal = invoiceItems.stream()
+            .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal vat = (vatRate != null ? vatRate : BigDecimal.ZERO)
+            .multiply(subTotal);
+        this.vatAmount = vat;
+        this.amount = subTotal.add(vat);
     }
 }

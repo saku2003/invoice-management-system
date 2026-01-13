@@ -1,8 +1,8 @@
 package org.example.service;
 
 import org.example.entity.user.CreateUserDTO;
-import org.example.entity.user.UserDTO;
 import org.example.entity.user.User;
+import org.example.entity.user.UserDTO;
 import org.example.exception.BusinessRuleException;
 import org.example.exception.EntityNotFoundException;
 import org.example.exception.ValidationException;

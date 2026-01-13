@@ -43,7 +43,9 @@ public class CompanyUserMenu {
                 case 1 -> listCompanyUsers();
                 case 2 -> addUserToCompany();
                 case 3 -> removeUserFromCompany();
-                case 4 -> { return; }
+                case 4 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }

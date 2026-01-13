@@ -40,7 +40,9 @@ public class CompanySettingsMenu {
             switch (choice) {
                 case 1 -> updateCompany();
                 case 2 -> viewCompanyDetails();
-                case 3 -> { return; }
+                case 3 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }

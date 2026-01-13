@@ -1,8 +1,8 @@
 package org.example.service;
 
 import org.example.auth.AuthService;
-import org.example.entity.user.UserDTO;
 import org.example.entity.user.User;
+import org.example.entity.user.UserDTO;
 import org.example.exception.AuthenticationException;
 import org.example.repository.CompanyUserRepository;
 import org.example.repository.UserRepository;
@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AuthServiceTest {
 
