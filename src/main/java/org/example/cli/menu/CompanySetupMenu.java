@@ -50,10 +50,8 @@ public class CompanySetupMenu {
                 }
                 case 3 -> {
                     if (!accountMenu.show()) {
-                        // User deleted account
                         return false;
                     }
-                    // User chose "Continue to Company Setup" - loop again
                 }
                 default -> System.out.println("Invalid choice.");
             }

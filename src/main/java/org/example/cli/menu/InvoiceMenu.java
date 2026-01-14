@@ -100,7 +100,6 @@ public class InvoiceMenu {
                 return;
             }
 
-            // Display clients for selection
             for (int i = 0; i < clients.size(); i++) {
                 ClientDTO client = clients.get(i);
                 System.out.println((i + 1) + ". " + client.firstName() + " " + client.lastName());

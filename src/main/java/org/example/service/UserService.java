@@ -62,7 +62,6 @@ public class UserService {
 
         log.debug("Found {} company associations for userId={}", companyUsers.size(), userId);
 
-        // delete all company associations before deleting the actual User
         int deletedCount = companyUserRepository.deleteByUserId(userId);
         log.debug("Deleted {} company associations for userId={}", deletedCount, userId);
 

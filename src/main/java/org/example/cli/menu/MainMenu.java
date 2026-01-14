@@ -23,7 +23,6 @@ public class MainMenu {
         this.services = services;
         this.companySetupMenu = companySetupMenu;
 
-        // Initialize sub-menus
         this.clientMenu = new ClientMenu(context, input, services);
         this.invoiceMenu = new InvoiceMenu(context, input, services, clientMenu);
         this.companyUserMenu = new CompanyUserMenu(context, input, services);
@@ -32,7 +31,6 @@ public class MainMenu {
 
     public boolean show() {
         while (true) {
-            // Safety check: ensure company is selected
             if (!context.hasCompanySelected()) {
                 System.out.println("\n✗ No company selected. Please select or create a company first.");
                 if (!companySetupMenu.show()) {
@@ -62,7 +60,7 @@ public class MainMenu {
                 case 4 -> companySettingsMenu.show();
                 case 5 -> {
                     if (!companySetupMenu.show()) {
-                        return false; // User deleted account or setup failed
+                        return false;
                     }
                 }
                 case 6 -> {
