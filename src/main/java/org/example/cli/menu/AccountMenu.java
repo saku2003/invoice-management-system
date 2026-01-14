@@ -28,11 +28,11 @@ public class AccountMenu {
             int choice = input.readInt();
             switch (choice) {
                 case 1 -> {
-                    return true; // Continue to company setup
+                    return true;
                 }
                 case 2 -> {
                     if (deleteAccount()) {
-                        return false; // Account was deleted
+                        return false;
                     }
                 }
                 default -> System.out.println("Invalid choice.");

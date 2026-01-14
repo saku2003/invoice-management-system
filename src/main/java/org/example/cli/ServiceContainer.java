@@ -10,14 +10,12 @@ import org.example.util.JpaUtil;
 public class ServiceContainer {
     private final EntityManagerFactory emf;
 
-    // Repositories
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final CompanyUserRepository companyUserRepository;
     private final ClientRepository clientRepository;
     private final InvoiceRepository invoiceRepository;
 
-    // Services
     private final UserService userService;
     private final AuthService authService;
     private final CompanyService companyService;
@@ -28,14 +26,12 @@ public class ServiceContainer {
     public ServiceContainer() {
         this.emf = JpaUtil.getEntityManagerFactory();
 
-        // Initialize repositories
         this.userRepository = new UserRepository(emf);
         this.companyRepository = new CompanyRepository(emf);
         this.companyUserRepository = new CompanyUserRepository(emf);
         this.clientRepository = new ClientRepository(emf);
         this.invoiceRepository = new InvoiceRepository(emf);
 
-        // Initialize services
         this.userService = new UserService(userRepository, companyUserRepository);
         this.authService = new AuthService(userRepository, userService);
         this.companyService = new CompanyService(companyRepository, companyUserRepository, userRepository);
